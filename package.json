@@ -22,5 +22,9 @@
   "bugs": {
     "url": "https://github.com/florianporada/thing_for_the_internet/issues"
   },
-  "homepage": "https://github.com/florianporada/thing_for_the_internet#readme"
+  "homepage": "https://github.com/florianporada/thing_for_the_internet#readme",
+  "dependencies": {
+    "eslint": "^3.15.0",
+    "eslint-config-es": "^0.8.10"
+  }
 }
