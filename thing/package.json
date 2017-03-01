@@ -1,0 +1,31 @@
+{
+  "name": "thing_for_the_internet_THING",
+  "version": "1.0.0",
+  "description": "a thing for the internet",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/florianporada/thing_for_the_internet.git"
+  },
+  "keywords": [
+    "iot",
+    "internet",
+    "of",
+    "things",
+    "nodejs"
+  ],
+  "author": "florianporada",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/florianporada/thing_for_the_internet/issues"
+  },
+  "homepage": "https://github.com/florianporada/thing_for_the_internet#readme",
+  "dependencies": {
+    "flaschenpost": "^0.15.3",
+    "socket.io": "^1.7.3",
+    "socket.io-client": "^1.7.3"
+  }
+}
