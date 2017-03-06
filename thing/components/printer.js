@@ -5,7 +5,7 @@ const flaschenpost = require('flaschenpost');
 const Printer = function () {
   this.logger = flaschenpost.getLogger();
 
-  this.lgger.info('printer initialized');
+  this.logger.info('printer initialized');
 };
 
 Printer.prototype.print = function (data) {

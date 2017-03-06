@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title></title>
+
+    <link rel="manifest" href="manifest.json">
+
+    <!-- un-comment this code to enable service worker
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('service-worker.js')
+          .then(() => console.log('service worker installed'))
+          .catch(err => console.log('Error', err));
+      }
+    </script>-->
+
+    <link href="lib/ionic/css/ionic.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+
+    <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
+    <link href="css/ionic.app.css" rel="stylesheet">
+    -->
+
+    <!--socket io client library-->
+    <script src="http://127.0.0.1:3030/socket.io/socket.io.js"></script>
+
+    <!-- ionic/angularjs js -->
+    <script src="lib/ionic/js/ionic.bundle.js"></script>
+    <script src="lib/angular-sanitize/angular-sanitize.min.js"></script>
+    <script src="lib/angular-socket-io/socket.js"></script>
+
+    <!-- cordova script (this will be a 404 during development) -->
+    <script src="cordova.js"></script>
+
+    <!-- your app's js -->
+    <script src="js/app.js"></script>
+  </head>
+  <body ng-app="printr" ng-controller="MainCtrl">
+
+    <ion-pane>
+      <ion-header-bar class="bar-stable">
+        <h1 class="title">Printr</h1>
+      </ion-header-bar>
+      <ion-content>
+        <ion-refresher
+          pulling-text="Pull to refresh..."
+          on-refresh="doRefresh()">
+        </ion-refresher>
+        <ion-list >
+          <ion-item ng-repeat="printer in printers" class="item-avatar" ng-click="openModal(printer)">
+            <img src="http://atechjourney.com/wp-content/uploads/older-printer.jpg">
+            <h2>{{printer.name}}</h2>
+            <p>{{printer.id}}</p>
+          </ion-item>
+        </ion-list>
+      </ion-content>
+    </ion-pane>
+
+
+    <!-- Modal -->
+    <script id="print-modal.html" type="text/ng-template">
+      <ion-modal-view>
+        <ion-header-bar class="bar-dark">
+          <h1 class="title">Create a new Task</h1>
+          <button class="button button-icon" ng-click="modal.hide()">
+            <i class="icon ion-android-close"></i>
+          </button>
+        </ion-header-bar>
+        <ion-content>
+          <form name="printform" novalidate ng-submit="printMessage(printform)">
+            <div class="list list-inset">
+              <label class="item item-input">
+                <input ng-model="message.from" type="text" placeholder="From" required="">
+              </label>
+              <label class="item item-input">
+                <textarea ng-model="message.content" rows="5" placeholder="Message" required=""></textarea>
+              </label>
+              <button type="submit" class="button button-block button-positive">Print Me</button>
+            </div>
+          </form>
+        </ion-content>
+      </ion-modal-view>
+    </script>
+  </body>
+</html>

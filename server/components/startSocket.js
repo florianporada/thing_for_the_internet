@@ -24,30 +24,68 @@ const StartSocket = function () {
 
   this.server.listen(this.socketPort);
   this.socket = io.listen(this.server);
+  this.printers = [];
+
+  this.printerlist = function () {
+    const tmpPrinters = [];
+
+    for (let i = 0, len = this.printers.length; i < len; i++) {
+      tmpPrinters.push({ id: this.printers[i].id, name: this.printers[i].name });
+    }
+
+    return tmpPrinters;
+  };
 
   this.socket.on('connection', client => {
     this.logger.info('Connection to client established');
-    this.client = client;
+
+    client.on('register', opt => {
+      if (opt.type === 'printer') {
+        client.name = opt.name;
+        client.type = opt.type;
+        this.printers.push(client);
+        this.logger.info(`printer ${opt.name} registered`);
+
+        this.socket.emit('printerlist', this.printerlist());
+      }
+
+      if (opt.type === 'client') {
+        this.socket.emit('printerlist', this.printerlist());
+        this.logger.info(`client ${opt.name} registered`);
+      }
+    });
+
+    client.on('getPrinters', () => {
+      this.socket.emit('printerlist', this.printerlist());
+    });
+
+    client.on('printMessage', data => {
+      if (this.printers.length === 0) {
+        return this.logger.error('No printer connected');
+      }
+
+      for (let i = 0, len = this.printers.length; i < len; i++) {
+        if (this.printers[i].id === data.id) {
+          this.logger.info(`emitted print`);
+          this.socket.to(this.printers[i].id).emit('printme', data.message);
+        }
+      }
+    });
 
     client.on('message', event => {
       this.logger.info('Received message from client!', { event });
     });
 
     client.on('disconnect', () => {
-      this.logger.info('Server has disconnected');
+      if (client.type === 'printer') {
+        this.printers.splice(this.printers.indexOf(client), 1);
+      }
+
+      this.logger.info('Client has disconnected');
     });
   });
 
   this.logger.info(`Socket-Server running at: ${config.hostip} Port: ${this.socketPort}`);
-};
-
-StartSocket.prototype.emitPrint = function (id, data) {
-  if (this.client === undefined) {
-    return this.logger.error('No socket-client connected');
-  }
-
-  this.logger.info(`emitted print`);
-  this.socket.to(id).emit('printme', data);
 };
 
 module.exports = StartSocket;
