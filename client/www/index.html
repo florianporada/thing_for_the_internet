@@ -24,12 +24,13 @@
     -->
 
     <!--socket io client library-->
-    <script src="http://127.0.0.1:3030/socket.io/socket.io.js"></script>
+    <script src="http://192.168.2.101:3030/socket.io/socket.io.js"></script>
 
     <!-- ionic/angularjs js -->
     <script src="lib/ionic/js/ionic.bundle.js"></script>
     <script src="lib/angular-sanitize/angular-sanitize.min.js"></script>
     <script src="lib/angular-socket-io/socket.js"></script>
+    <script src="lib/angular-local-storage/dist/angular-local-storage.js"></script>
 
     <!-- cordova script (this will be a 404 during development) -->
     <script src="cordova.js"></script>
@@ -40,8 +41,9 @@
   <body ng-app="printr" ng-controller="MainCtrl">
 
     <ion-pane>
-      <ion-header-bar class="bar-stable">
+      <ion-header-bar class="bar-postive">
         <h1 class="title">Printr</h1>
+        <button class="button button-icon ion-gear-a" ng-click="openNameModal()"></button>
       </ion-header-bar>
       <ion-content>
         <ion-refresher
@@ -49,7 +51,7 @@
           on-refresh="doRefresh()">
         </ion-refresher>
         <ion-list >
-          <ion-item ng-repeat="printer in printers" class="item-avatar" ng-click="openModal(printer)">
+          <ion-item ng-repeat="printer in printers" class="item-avatar" ng-click="openPrintModal(printer)">
             <img src="http://atechjourney.com/wp-content/uploads/older-printer.jpg">
             <h2>{{printer.name}}</h2>
             <p>{{printer.id}}</p>
@@ -59,12 +61,12 @@
     </ion-pane>
 
 
-    <!-- Modal -->
+    <!-- Print Modal -->
     <script id="print-modal.html" type="text/ng-template">
       <ion-modal-view>
         <ion-header-bar class="bar-dark">
-          <h1 class="title">Create a new Task</h1>
-          <button class="button button-icon" ng-click="modal.hide()">
+          <h1 class="title">Print something</h1>
+          <button class="button button-icon" ng-click="printModal.hide()">
             <i class="icon ion-android-close"></i>
           </button>
         </ion-header-bar>
@@ -72,12 +74,39 @@
           <form name="printform" novalidate ng-submit="printMessage(printform)">
             <div class="list list-inset">
               <label class="item item-input">
-                <input ng-model="message.from" type="text" placeholder="From" required="">
+                <input ng-model="name" type="text" placeholder="From" required ng-minlength="5" ng-maxlength="20">
               </label>
               <label class="item item-input">
-                <textarea ng-model="message.content" rows="5" placeholder="Message" required=""></textarea>
+                <textarea ng-model="printform.content" rows="5" placeholder="Message" ng-minlength="3" required ng-maxlength="280"></textarea>
               </label>
               <button type="submit" class="button button-block button-positive">Print Me</button>
+            </div>
+          </form>
+        </ion-content>
+      </ion-modal-view>
+    </script>
+
+    <!-- Name Modal -->
+    <script id="name-modal.html" type="text/ng-template">
+      <ion-modal-view>
+        <ion-header-bar class="bar-dark">
+          <h1 class="title">Your name</h1>
+          <button class="button button-icon" ng-click="nameModal.hide()">
+            <i class="icon ion-android-close"></i>
+          </button>
+        </ion-header-bar>
+        <ion-content>
+          <div class="card">
+            <div class="item item-text-wrap">
+              You are <strong>{{name}}</strong>
+            </div>
+          </div>
+          <form name="nameform" novalidate ng-submit="setName(nameform)">
+            <div class="list list-inset">
+              <label class="item item-input">
+                <input ng-model="nameform.name" type="text" placeholder="Name" required ng-minlength="3" ng-maxlength="20">
+              </label>
+              <button type="submit" class="button button-block button-positive">Set name</button>
             </div>
           </form>
         </ion-content>

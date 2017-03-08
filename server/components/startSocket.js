@@ -4,25 +4,19 @@ const http = require('http');
 const io = require('socket.io');
 const flaschenpost = require('flaschenpost');
 
-const config = {
-  socketport: 3030,
-  hostip: '127.0.0.1'
-};
-
-const StartSocket = function () {
+const StartSocket = function (config) {
   if (!(this instanceof StartSocket)) {
     return new StartSocket(config);
   }
 
   this.config = config;
   this.logger = flaschenpost.getLogger();
-  this.socketPort = config.socketport;
   this.server = http.createServer((req, res) => {
     res.writeHead(200, { 'Content-Type': 'text/html' });
     res.end('<h1>hello dear friend!</h1>');
   });
 
-  this.server.listen(this.socketPort);
+  this.server.listen(this.config.socketport);
   this.socket = io.listen(this.server);
   this.printers = [];
 
@@ -79,13 +73,14 @@ const StartSocket = function () {
     client.on('disconnect', () => {
       if (client.type === 'printer') {
         this.printers.splice(this.printers.indexOf(client), 1);
+        this.socket.emit('printerlist', this.printerlist());
       }
 
       this.logger.info('Client has disconnected');
     });
   });
 
-  this.logger.info(`Socket-Server running at: ${config.hostip} Port: ${this.socketPort}`);
+  this.logger.info(`Socket-Server running at: ${this.config.socketurl} Port: ${this.config.socketport}`);
 };
 
 module.exports = StartSocket;

@@ -1,0 +1,15 @@
+{
+  "uploadOnSave": false,
+  "useAtomicWrites": false,
+  "deleteLocal": false,
+  "hostname": "192.168.2.103",
+  "port": "22",
+  "target": "/home/pi",
+  "ignore": [
+    "/*/node_modules/**"
+  ],
+  "username": "pi",
+  "password": "raspberry",
+  "watch": [],
+  "transport": "scp"
+}

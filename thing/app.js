@@ -1,15 +1,15 @@
 'use strict';
 
-const socket = require('socket.io-client')('http://127.0.0.1:3030');
+const config = require('./config');
+const socket = require('socket.io-client')(`http://${config.socketurl}:${config.socketport}`);
 
 const Printer = require('./components/printer');
 const printer = new Printer();
 
 socket.on('connect', () => {
   console.log('Connected');
-  socket.send('Hello, server! Love, Client.');
   socket.emit('register', {
-    name: 'Printy McPrintface',
+    name: `${config.name}`,
     type: 'printer'
   });
 });
