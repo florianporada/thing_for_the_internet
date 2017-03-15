@@ -12,24 +12,26 @@ def read_in():
 def main():
     #create printer object
     p = printer.ThermalPrinter(serialport='/dev/ttyAMA0')
-    #p.print_text("\nWas ist das fuer 1 Life?\n")
 
     #get our data as an array from read_in()
     lines = read_in()
 
-    p.justify('R')
-    p.print_text(lines['from'] + '\n')
-    print lines['from']
-
     p.justify('L')
     p.print_text(textwrap.fill(lines['content']) + '\n')
-    print lines['content']
+    #print lines['content']
+
+    p.justify('R')
+    p.print_text('--------' + '\n')
+    p.font_b()
+    p.print_text(lines['from'] + '\n')
+    p.font_b(False)
+    #print lines['from']
 
     p.justify('R')
     p.font_b()
     p.print_text(lines['meta'] + '\n')
     p.font_b(False)
-    print lines['meta']
+    #print lines['meta']
 
     p.justify('L')
     p.print_text('________________________________')

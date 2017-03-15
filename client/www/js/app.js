@@ -26,7 +26,7 @@ run($ionicPlatform => {
 }).
 factory('socket', socketFactory => {
   //Create socket and connect to http://chat.socket.io
-  const socket = io.connect('http://192.168.2.101:3030/');
+  const socket = io.connect('http://46.101.238.39:3030/');
 
   const mySocket = socketFactory({
     ioSocket: socket
@@ -48,7 +48,6 @@ controller('MainCtrl', ($scope, $ionicModal, socket, localStorageService) => {
 
   $scope.name = '';
   $scope.printers = [];
-  $scope.message = {};
 
   if (localStorageService.get('clientname')) {
     $scope.name = localStorageService.get('clientname');
@@ -64,16 +63,19 @@ controller('MainCtrl', ($scope, $ionicModal, socket, localStorageService) => {
 
       socket.emit('printMessage', {
         id: activePrinter.id,
-        message: message
+        message
       });
+
       $scope.printModal.hide();
+      form.content = '';
     }
   };
   $scope.setName = function (form) {
     if (form.$valid) {
-      localStorageService.set('clientname', form.name);
       $scope.name = form.name;
+      localStorageService.set('clientname', $scope.name);
       $scope.nameModal.hide();
+      form.name = '';
     }
   };
 
@@ -103,7 +105,6 @@ controller('MainCtrl', ($scope, $ionicModal, socket, localStorageService) => {
 
   $scope.closePrintModal = () => {
     $scope.printModal.hide();
-
     activePrinter = {};
   };
 

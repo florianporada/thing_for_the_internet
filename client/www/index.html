@@ -24,7 +24,7 @@
     -->
 
     <!--socket io client library-->
-    <script src="http://192.168.2.101:3030/socket.io/socket.io.js"></script>
+    <script src="http://46.101.238.39:3030/socket.io/socket.io.js"></script>
 
     <!-- ionic/angularjs js -->
     <script src="lib/ionic/js/ionic.bundle.js"></script>
@@ -74,7 +74,7 @@
           <form name="printform" novalidate ng-submit="printMessage(printform)">
             <div class="list list-inset">
               <label class="item item-input">
-                <input ng-model="name" type="text" placeholder="From" required ng-minlength="5" ng-maxlength="20">
+                <input ng-model="name" type="text" placeholder="From" required ng-minlength="3" ng-maxlength="20">
               </label>
               <label class="item item-input">
                 <textarea ng-model="printform.content" rows="5" placeholder="Message" ng-minlength="3" required ng-maxlength="280"></textarea>
