@@ -3,7 +3,7 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-angular.module('printr', [ 'ionic', 'btford.socket-io', 'LocalStorageModule' ]).
+angular.module('printr', [ 'ionic', 'btford.socket-io', 'LocalStorageModule', 'ngCordova' ]).
 config(localStorageServiceProvider => {
   localStorageServiceProvider.setPrefix('printr');
 }).
@@ -34,7 +34,7 @@ factory('socket', socketFactory => {
 
   return mySocket;
 }).
-controller('MainCtrl', ($scope, $ionicModal, socket, localStorageService) => {
+controller('MainCtrl', ($scope, $rootScope, $ionicModal, socket, localStorageService, $cordovaCamera) => {
   let activePrinter = {};
 
   socket.emit('register', {
@@ -46,19 +46,42 @@ controller('MainCtrl', ($scope, $ionicModal, socket, localStorageService) => {
     $scope.printers = data;
   });
 
-  $scope.name = '';
+  $rootScope.name = '';
+  $rootScope.photo = '';
   $scope.printers = [];
 
   if (localStorageService.get('clientname')) {
-    $scope.name = localStorageService.get('clientname');
+    $rootScope.name = localStorageService.get('clientname');
+  }
+
+  $scope.takePhoto = function () {
+    const options = {
+      quality: 90,
+      destinationType: Camera.DestinationType.DATA_URL,
+      sourceType: Camera.PictureSourceType.CAMERA,
+      allowEdit: false,
+      encodingType: Camera.EncodingType.PNG,
+      targetWidth: 500,
+      targetHeight: 500,
+      saveToPhotoAlbum: false,
+      correctOrientation: true
+    };
+
+    $cordovaCamera.getPicture(options).then(imageData => {
+      console.log(imageData);
+      $rootScope.photo = imageData;
+    }, err => {
+      console.log(err);
+    });
   }
 
   $scope.printMessage = function (form) {
     if (form.$valid) {
       const message = {
         meta: new Date(),
-        from: $scope.name,
-        content: form.content
+        from: $rootScope.name,
+        content: form.content,
+        image: $rootScope.photo
       };
 
       socket.emit('printMessage', {
@@ -68,12 +91,13 @@ controller('MainCtrl', ($scope, $ionicModal, socket, localStorageService) => {
 
       $scope.printModal.hide();
       form.content = '';
+      $rootScope.photo = '';
     }
   };
   $scope.setName = function (form) {
     if (form.$valid) {
-      $scope.name = form.name;
-      localStorageService.set('clientname', $scope.name);
+      $rootScope.name = form.name;
+      localStorageService.set('clientname', $rootScope.name);
       $scope.nameModal.hide();
       form.name = '';
     }
@@ -96,6 +120,9 @@ controller('MainCtrl', ($scope, $ionicModal, socket, localStorageService) => {
     animation: 'slide-in-up'
   }).then(modal => {
     $scope.nameModal = modal;
+    if (!localStorageService.get('clientname')) {
+      $scope.nameModal.show();
+    }
   });
 
   $scope.openPrintModal = item => {

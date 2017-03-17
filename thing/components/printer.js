@@ -1,5 +1,7 @@
 'use strict';
 
+const path = require('path')
+
 const PythonShell = require('python-shell');
 const datetime = require('node-datetime');
 
@@ -7,8 +9,8 @@ const Printer = function () {
   console.info('printer initialized');
 };
 
-Printer.prototype.print = function (data) {
-  const shell = new PythonShell('./py/thermal.py');
+Printer.prototype.print = function (data, cb) {
+  const shell = new PythonShell(path.normalize('./py/thermal.py'));
 
   data.from = data.from.replace(/\u00dc/g, 'Ue');
   data.from = data.from.replace(/\u00fc/g, 'ue');
@@ -47,7 +49,7 @@ Printer.prototype.print = function (data) {
       throw err;
     }
 
-    console.log('printed', { data });
+    cb(data);
   });
 };
 

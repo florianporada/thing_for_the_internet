@@ -45,10 +45,10 @@ const ledSwitch = function (state) {
   }
 };
 
-gpio.setup(led, gpio.DIR_OUT);
-
 socket.on('connect', () => {
-  ledSwitch('on');
+  gpio.setup(led, gpio.DIR_OUT, function () {
+    ledSwitch('on');
+  });
   console.log('Connected');
   socket.emit('register', {
     name: `${config.name}`,
@@ -67,7 +67,9 @@ socket.on('printme', data => {
   } else {
     ledSwitch('off');
   }
-  printer.print(data);
+  printer.print(data, () => {
+    console.log('printed', data.content, data.from, data.meta);
+  });
 });
 
 socket.on('disconnect', () => {

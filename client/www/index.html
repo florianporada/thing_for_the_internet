@@ -31,6 +31,7 @@
     <script src="lib/angular-sanitize/angular-sanitize.min.js"></script>
     <script src="lib/angular-socket-io/socket.js"></script>
     <script src="lib/angular-local-storage/dist/angular-local-storage.js"></script>
+    <script src="lib/ngCordova/dist/ng-cordova.js"></script>
 
     <!-- cordova script (this will be a 404 during development) -->
     <script src="cordova.js"></script>
@@ -42,7 +43,7 @@
 
     <ion-pane>
       <ion-header-bar class="bar-postive">
-        <h1 class="title">Printr</h1>
+        <h1 class="title">printr.</h1>
         <button class="button button-icon ion-gear-a" ng-click="openNameModal()"></button>
       </ion-header-bar>
       <ion-content>
@@ -71,14 +72,20 @@
           </button>
         </ion-header-bar>
         <ion-content>
-          <form name="printform" novalidate ng-submit="printMessage(printform)">
+          <form name="printform" novalidate ng-submit="printMessage(printform, name)">
             <div class="list list-inset">
               <label class="item item-input">
-                <input ng-model="name" type="text" placeholder="From" required ng-minlength="3" ng-maxlength="20">
+                <input ng-model="$root.name" type="text" placeholder="From" required ng-minlength="3" ng-maxlength="20">
               </label>
               <label class="item item-input">
                 <textarea ng-model="printform.content" rows="5" placeholder="Message" ng-minlength="3" required ng-maxlength="280"></textarea>
               </label>
+              <div ng-show="$root.photo !== ''" class="card">
+                <div class="item item-text-wrap">
+                  <img class="full-image"ng-src="data:image/png;base64,{{$root.photo}}" style="text-align: center">
+                </div>
+              </div>
+              <button class="button button-block icon-center button-icon ion-camera" ng-click="takePhoto()"></button>
               <button type="submit" class="button button-block button-positive">Print Me</button>
             </div>
           </form>
