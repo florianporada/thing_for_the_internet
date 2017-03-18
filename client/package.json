@@ -21,7 +21,8 @@
     "cordova-plugin-device",
     "cordova-plugin-splashscreen",
     "ionic-plugin-keyboard",
-    "cordova-plugin-camera"
+    "cordova-plugin-camera",
+    "https://github.com/wymsee/cordova-imagePicker.git"
   ],
   "cordovaPlatforms": [
     "ios",

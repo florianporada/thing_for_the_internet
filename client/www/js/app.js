@@ -36,6 +36,21 @@ controller('MainCtrl', ($scope, $rootScope, $ionicModal, socket, localStorageSer
   let activePrinter = {};
   let clientId;
 
+  const camera = function (options) {
+    if (ionic.Platform.isWebView() && ionic.Platform.device().platform === 'browser') {
+      angular.element(document).find('body').removeClass('modal-open');
+    }
+
+    $cordovaCamera.getPicture(options).then(imageData => {
+      $rootScope.photo = `data:image/png;base64,${imageData}`;
+      if (ionic.Platform.isWebView() && ionic.Platform.device().platform === 'browser') {
+        angular.element(document).find('body').addClass('modal-open');
+      }
+    }, err => {
+      console.log(err);
+    });
+  };
+
   socket.emit('register', {
     name: localStorageService.get('clientname') ? localStorageService.get('clientname') : 'random client',
     type: 'client'
@@ -68,11 +83,23 @@ controller('MainCtrl', ($scope, $rootScope, $ionicModal, socket, localStorageSer
     $rootScope.photo = '';
   };
 
-  $scope.takePhoto = function () {
-    if (ionic.Platform.isWebView() && ionic.Platform.device().platform === 'browser') {
-      angular.element(document).find('body').removeClass('modal-open');
-    }
+  $scope.choosePhoto = function () {
+    const options = {
+      quality: 90,
+      destinationType: Camera.DestinationType.DATA_URL,
+      sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
+      allowEdit: false,
+      encodingType: Camera.EncodingType.PNG,
+      targetWidth: 500,
+      targetHeight: 500,
+      saveToPhotoAlbum: false,
+      correctOrientation: true
+    };
 
+    camera(options);
+  };
+
+  $scope.takePhoto = function () {
     const options = {
       quality: 90,
       destinationType: Camera.DestinationType.DATA_URL,
@@ -85,23 +112,18 @@ controller('MainCtrl', ($scope, $rootScope, $ionicModal, socket, localStorageSer
       correctOrientation: true
     };
 
-    $cordovaCamera.getPicture(options).then(imageData => {
-      $rootScope.photo = imageData;
-      if (ionic.Platform.isWebView() && ionic.Platform.device().platform === 'browser') {
-        angular.element(document).find('body').addClass('modal-open');
-      }
-    }, err => {
-      console.log(err);
-    });
+    camera(options);
   }
 
   $scope.printMessage = function (form) {
     if (form.$valid) {
+        // data:image/png;base64,
+
       const message = {
         meta: new Date(),
         from: $rootScope.name,
         content: form.content,
-        image: $rootScope.photo
+        image: $rootScope.photo.split(';base64,')[1]
       };
 
       socket.emit('printMessage', {

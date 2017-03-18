@@ -16,12 +16,12 @@
       }
     </script>-->
 
-    <link href="lib/ionic/css/ionic.css" rel="stylesheet">
-    <link href="css/style.css" rel="stylesheet">
+    <!-- <link href="lib/ionic/css/ionic.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet"> -->
 
-    <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
+    <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above    -->
+
     <link href="css/ionic.app.css" rel="stylesheet">
-    -->
 
     <!--socket io client library-->
     <script src="https://noiseyairplanes.me:3030/socket.io/socket.io.js"></script>
@@ -82,10 +82,11 @@
               </label>
               <div ng-show="$root.photo !== ''" class="card">
                 <div class="item item-text-wrap">
-                  <img class="full-image"ng-src="data:image/png;base64,{{$root.photo}}" style="text-align: center">
+                  <img class="full-image" ng-src="{{$root.photo}}" style="text-align: center">
                   <a class="button button-block icon-center button-icon ion-trash-a" ng-click="removePhoto()"></a>
                 </div>
               </div>
+              <a class="button button-block icon-center button-icon ion-images" ng-click="choosePhoto()"></a>
               <a class="button button-block icon-center button-icon ion-camera" ng-click="takePhoto()"></a>
               <button type="submit" class="button button-block button-positive">Print Me</button>
             </div>
