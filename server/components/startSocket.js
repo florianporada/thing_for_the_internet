@@ -27,7 +27,7 @@ const StartSocket = function (config) {
   this.socket = io.listen(this.server);
   this.printers = [];
 
-  this.printerlist = function () {
+  this.printerList = function () {
     const tmpPrinters = [];
 
     for (let i = 0, len = this.printers.length; i < len; i++) {
@@ -46,18 +46,22 @@ const StartSocket = function (config) {
         client.type = opt.type;
         this.printers.push(client);
         this.logger.info(`printer ${opt.name} registered`);
-
-        this.socket.emit('printerlist', this.printerlist());
       }
 
       if (opt.type === 'client') {
-        this.socket.emit('printerlist', this.printerlist());
+        this.socket.emit('clientId', client.id);
         this.logger.info(`client ${opt.name} registered`);
       }
+
+      this.socket.emit('printerList', this.printerList());
     });
 
     client.on('getPrinters', () => {
-      this.socket.emit('printerlist', this.printerlist());
+      this.socket.emit('printerList', this.printerList());
+    });
+
+    client.on('printed', data => {
+      this.socket.to(data.clientId).emit('printedMessage', data);
     });
 
     client.on('printMessage', data => {
@@ -66,9 +70,9 @@ const StartSocket = function (config) {
       }
 
       for (let i = 0, len = this.printers.length; i < len; i++) {
-        if (this.printers[i].id === data.id) {
+        if (this.printers[i].id === data.printerId) {
           this.logger.info(`emitted print`);
-          this.socket.to(this.printers[i].id).emit('printme', data.message);
+          this.socket.to(this.printers[i].id).emit('printme', data);
         }
       }
     });
@@ -80,7 +84,7 @@ const StartSocket = function (config) {
     client.on('disconnect', () => {
       if (client.type === 'printer') {
         this.printers.splice(this.printers.indexOf(client), 1);
-        this.socket.emit('printerlist', this.printerlist());
+        this.socket.emit('printerList', this.printerList());
       }
 
       this.logger.info('Client has disconnected');

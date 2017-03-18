@@ -25,25 +25,35 @@ run($ionicPlatform => {
   });
 }).
 factory('socket', socketFactory => {
-  //Create socket and connect to http://chat.socket.io
   const socket = io.connect('https://noiseyairplanes.me:3030/', { secure: true });
-
   const mySocket = socketFactory({
     ioSocket: socket
   });
 
   return mySocket;
 }).
-controller('MainCtrl', ($scope, $rootScope, $ionicModal, socket, localStorageService, $cordovaCamera) => {
+controller('MainCtrl', ($scope, $rootScope, $ionicModal, socket, localStorageService, $cordovaCamera, $ionicPopup) => {
   let activePrinter = {};
+  let clientId;
 
   socket.emit('register', {
-    name: 'Phonie McPhoneface',
+    name: localStorageService.get('clientname') ? localStorageService.get('clientname') : 'random client',
     type: 'client'
   });
 
-  socket.on('printerlist', data => {
+  socket.on('printerList', data => {
     $scope.printers = data;
+  });
+
+  socket.on('printedMessage', data => {
+    $ionicPopup.alert({
+      title: 'Printed Message',
+      template: `sent data to ${data.printerId}`
+    });
+  });
+
+  socket.on('clientId', data => {
+    clientId = data;
   });
 
   $rootScope.name = '';
@@ -95,7 +105,8 @@ controller('MainCtrl', ($scope, $rootScope, $ionicModal, socket, localStorageSer
       };
 
       socket.emit('printMessage', {
-        id: activePrinter.id,
+        clientId,
+        printerId: activePrinter.id,
         message
       });
 

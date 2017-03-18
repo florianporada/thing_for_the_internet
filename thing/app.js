@@ -46,7 +46,7 @@ const ledSwitch = function (state) {
 };
 
 socket.on('connect', () => {
-  gpio.setup(led, gpio.DIR_OUT, function () {
+  gpio.setup(led, gpio.DIR_OUT, () => {
     ledSwitch('on');
   });
   console.log('Connected');
@@ -67,8 +67,10 @@ socket.on('printme', data => {
   } else {
     ledSwitch('off');
   }
-  printer.print(data, () => {
-    console.log('printed', data.content, data.from, data.meta);
+
+  printer.print(data.message, () => {
+    //console.log('printed', data.content, data.from, data.meta);
+    socket.emit('printed', { clientId: data.clientId, printerId: data.printerId });
   });
 });
 
