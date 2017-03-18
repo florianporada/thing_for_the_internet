@@ -24,7 +24,7 @@
     -->
 
     <!--socket io client library-->
-    <script src="http://46.101.238.39:3030/socket.io/socket.io.js"></script>
+    <script src="https://noiseyairplanes.me:3030/socket.io/socket.io.js"></script>
 
     <!-- ionic/angularjs js -->
     <script src="lib/ionic/js/ionic.bundle.js"></script>
@@ -53,7 +53,7 @@
         </ion-refresher>
         <ion-list >
           <ion-item ng-repeat="printer in printers" class="item-avatar" ng-click="openPrintModal(printer)">
-            <img src="http://atechjourney.com/wp-content/uploads/older-printer.jpg">
+            <img src="./img/printer_icon.png">
             <h2>{{printer.name}}</h2>
             <p>{{printer.id}}</p>
           </ion-item>
@@ -83,9 +83,10 @@
               <div ng-show="$root.photo !== ''" class="card">
                 <div class="item item-text-wrap">
                   <img class="full-image"ng-src="data:image/png;base64,{{$root.photo}}" style="text-align: center">
+                  <a class="button button-block icon-center button-icon ion-trash-a" ng-click="removePhoto()"></a>
                 </div>
               </div>
-              <button class="button button-block icon-center button-icon ion-camera" ng-click="takePhoto()"></button>
+              <a class="button button-block icon-center button-icon ion-camera" ng-click="takePhoto()"></a>
               <button type="submit" class="button button-block button-positive">Print Me</button>
             </div>
           </form>

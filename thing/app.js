@@ -2,7 +2,7 @@
 
 const config = require('./config');
 const gpio = require('rpi-gpio');
-const socket = require('socket.io-client')(`http://${config.socketurl}:${config.socketport}`);
+const socket = require('socket.io-client')(`https://${config.socketurl}:${config.socketport}`);
 const led = 12;
 
 const Printer = require('./components/printer');

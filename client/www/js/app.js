@@ -26,7 +26,7 @@ run($ionicPlatform => {
 }).
 factory('socket', socketFactory => {
   //Create socket and connect to http://chat.socket.io
-  const socket = io.connect('http://46.101.238.39:3030/');
+  const socket = io.connect('https://noiseyairplanes.me:3030/', { secure: true });
 
   const mySocket = socketFactory({
     ioSocket: socket
@@ -54,7 +54,15 @@ controller('MainCtrl', ($scope, $rootScope, $ionicModal, socket, localStorageSer
     $rootScope.name = localStorageService.get('clientname');
   }
 
+  $scope.removePhoto = function () {
+    $rootScope.photo = '';
+  };
+
   $scope.takePhoto = function () {
+    if (ionic.Platform.isWebView() && ionic.Platform.device().platform === 'browser') {
+      angular.element(document).find('body').removeClass('modal-open');
+    }
+
     const options = {
       quality: 90,
       destinationType: Camera.DestinationType.DATA_URL,
@@ -68,8 +76,10 @@ controller('MainCtrl', ($scope, $rootScope, $ionicModal, socket, localStorageSer
     };
 
     $cordovaCamera.getPicture(options).then(imageData => {
-      console.log(imageData);
       $rootScope.photo = imageData;
+      if (ionic.Platform.isWebView() && ionic.Platform.device().platform === 'browser') {
+        angular.element(document).find('body').addClass('modal-open');
+      }
     }, err => {
       console.log(err);
     });

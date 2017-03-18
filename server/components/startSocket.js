@@ -1,8 +1,15 @@
 'use strict';
 
-const http = require('http');
+const https = require('https');
+const fs = require('fs');
 const io = require('socket.io');
 const flaschenpost = require('flaschenpost');
+
+const options = {
+  key: fs.readFileSync('/etc/letsencrypt/live/noiseyairplanes.me/privkey.pem'),
+  cert: fs.readFileSync('/etc/letsencrypt/live/noiseyairplanes.me/cert.pem'),
+  ca: fs.readFileSync('/etc/letsencrypt/live/noiseyairplanes.me/chain.pem')
+};
 
 const StartSocket = function (config) {
   if (!(this instanceof StartSocket)) {
@@ -11,7 +18,7 @@ const StartSocket = function (config) {
 
   this.config = config;
   this.logger = flaschenpost.getLogger();
-  this.server = http.createServer((req, res) => {
+  this.server = https.createServer(options, (req, res) => {
     res.writeHead(200, { 'Content-Type': 'text/html' });
     res.end('<h1>hello dear friend!</h1>');
   });
