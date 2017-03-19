@@ -113,17 +113,19 @@ controller('MainCtrl', ($scope, $rootScope, $ionicModal, socket, localStorageSer
     };
 
     camera(options);
-  }
+  };
 
   $scope.printMessage = function (form) {
     if (form.$valid) {
-        // data:image/png;base64,
+      if ($rootScope.photo !== '') {
+        $rootScope.photo = $rootScope.photo.split(';base64,')[1];
+      }
 
       const message = {
         meta: new Date(),
         from: $rootScope.name,
         content: form.content,
-        image: $rootScope.photo.split(';base64,')[1]
+        image: $rootScope.photo
       };
 
       socket.emit('printMessage', {

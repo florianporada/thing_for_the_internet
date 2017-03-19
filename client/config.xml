@@ -71,5 +71,4 @@
         <splash density="port-xxxhdpi" src="resources/android/splash/drawable-port-xxxhdpi-screen.png" />
     </platform>
     <icon src="resources/android/icon/drawable-xhdpi-icon.png" />
-    <plugin name="cordova-plugin-image-picker" spec="https://github.com/wymsee/cordova-imagePicker.git" />
 </widget>
