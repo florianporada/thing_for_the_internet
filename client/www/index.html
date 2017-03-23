@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
-    <title></title>
+    <title>printr.</title>
 
     <link rel="manifest" href="manifest.json">
 
@@ -72,13 +72,13 @@
           </button>
         </ion-header-bar>
         <ion-content>
-          <form name="printform" novalidate ng-submit="printMessage(printform, name)">
+          <form name="printform" novalidate ng-submit="printMessage(printform.$valid)">
             <div class="list list-inset">
               <label class="item item-input">
-                <input ng-model="$root.name" type="text" placeholder="From" required ng-minlength="3" ng-maxlength="20">
+                <input name="name" ng-model="$root.name" type="text" placeholder="From" required ng-minlength="3" ng-maxlength="20">
               </label>
               <label class="item item-input">
-                <textarea ng-model="printform.content" rows="5" placeholder="Message" ng-minlength="3" required ng-maxlength="280"></textarea>
+                <textarea name="content" ng-model="$root.content" rows="5" placeholder="Message" ng-minlength="3" required ng-maxlength="280"></textarea>
               </label>
               <div ng-show="$root.photo !== ''" class="card">
                 <div class="item item-text-wrap">
@@ -88,7 +88,12 @@
               </div>
               <a class="button button-block icon-center button-icon ion-images" ng-click="choosePhoto()"></a>
               <a class="button button-block icon-center button-icon ion-camera" ng-click="takePhoto()"></a>
-              <button type="submit" class="button button-block button-positive">Print Me</button>
+              <button type="submit" class="button button-block button-positive" ng-disabled="printform.$invalid">Print Me</button>
+              <div ng-show="printform.$invalid && !printform.content.$pristine" class="card">
+                <div class="item item-text-wrap">
+                  Name or Message too short or too long
+                </div>
+              </div>
             </div>
           </form>
         </ion-content>
@@ -110,12 +115,17 @@
               You are <strong>{{name}}</strong>
             </div>
           </div>
-          <form name="nameform" novalidate ng-submit="setName(nameform)">
+          <form name="nameform" novalidate ng-submit="setName(nameform.$valid)">
             <div class="list list-inset">
               <label class="item item-input">
-                <input ng-model="nameform.name" type="text" placeholder="Name" required ng-minlength="3" ng-maxlength="20">
+                <input name="name" ng-model="$root.name" type="text" placeholder="Name" required ng-minlength="3" ng-maxlength="20">
               </label>
-              <button type="submit" class="button button-block button-positive">Set name</button>
+              <button type="submit" class="button button-block button-positive" ng-disabled="nameform.$invalid">Set name</button>
+              <div ng-show="nameform.name.$invalid && !nameform.name.$pristine" class="card">
+                <div class="item item-text-wrap">
+                  Name too short or too long
+                </div>
+              </div>
             </div>
           </form>
         </ion-content>

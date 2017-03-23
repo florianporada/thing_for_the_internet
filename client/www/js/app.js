@@ -36,7 +36,7 @@ controller('MainCtrl', ($scope, $rootScope, $ionicModal, socket, localStorageSer
   let activePrinter = {};
   let clientId;
 
-  const camera = function (options) {
+  const startCamera = function (options) {
     if (ionic.Platform.isWebView() && ionic.Platform.device().platform === 'browser') {
       angular.element(document).find('body').removeClass('modal-open');
     }
@@ -72,6 +72,7 @@ controller('MainCtrl', ($scope, $rootScope, $ionicModal, socket, localStorageSer
   });
 
   $rootScope.name = '';
+  $rootScope.content = '';
   $rootScope.photo = '';
   $scope.printers = [];
 
@@ -96,7 +97,7 @@ controller('MainCtrl', ($scope, $rootScope, $ionicModal, socket, localStorageSer
       correctOrientation: true
     };
 
-    camera(options);
+    startCamera(options);
   };
 
   $scope.takePhoto = function () {
@@ -112,11 +113,11 @@ controller('MainCtrl', ($scope, $rootScope, $ionicModal, socket, localStorageSer
       correctOrientation: true
     };
 
-    camera(options);
+    startCamera(options);
   };
 
-  $scope.printMessage = function (form) {
-    if (form.$valid) {
+  $scope.printMessage = function (isValid) {
+    if (isValid) {
       if ($rootScope.photo !== '') {
         $rootScope.photo = $rootScope.photo.split(';base64,')[1];
       }
@@ -124,7 +125,7 @@ controller('MainCtrl', ($scope, $rootScope, $ionicModal, socket, localStorageSer
       const message = {
         meta: new Date(),
         from: $rootScope.name,
-        content: form.content,
+        content: $rootScope.content,
         image: $rootScope.photo
       };
 
@@ -135,16 +136,14 @@ controller('MainCtrl', ($scope, $rootScope, $ionicModal, socket, localStorageSer
       });
 
       $scope.printModal.hide();
-      form.content = '';
+      $rootScope.content = '';
       $rootScope.photo = '';
     }
   };
-  $scope.setName = function (form) {
-    if (form.$valid) {
-      $rootScope.name = form.name;
+  $scope.setName = function (isValid) {
+    if (isValid) {
       localStorageService.set('clientname', $rootScope.name);
       $scope.nameModal.hide();
-      form.name = '';
     }
   };
 
