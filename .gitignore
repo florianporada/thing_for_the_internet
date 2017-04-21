@@ -11,3 +11,4 @@ npm-debug.log
 
 # custom
 .remote-sync.json
+*db.json
