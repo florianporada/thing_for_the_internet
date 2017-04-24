@@ -1,6 +1,9 @@
 # Node.js folders
 *node_modules/
 
+# Bower components
+thing/public/components
+
 # Build artefacts
 *build/
 

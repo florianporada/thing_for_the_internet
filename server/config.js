@@ -1,6 +1,6 @@
 'use strict';
 
-let config = {};
+const config = {};
 
 config.socketurl = process.env.SOCKET_URL || 'noiseyairplanes';
 config.socketport = process.env.SOCKET_PORT || '3030';

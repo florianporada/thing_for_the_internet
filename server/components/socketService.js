@@ -11,7 +11,7 @@ const options = {
   ca: fs.readFileSync('/etc/letsencrypt/live/noiseyairplanes.me/chain.pem')
 };
 
-const StartSocket = function (config) {
+const SocketService = function (config) {
   if (!(this instanceof StartSocket)) {
     return new StartSocket(config);
   }
@@ -22,7 +22,9 @@ const StartSocket = function (config) {
     res.writeHead(200, { 'Content-Type': 'text/html' });
     res.end('<h1>hello dear friend!</h1>');
   });
+};
 
+SocketService.prototype.start = function () {
   this.server.listen(this.config.socketport);
   this.socket = io.listen(this.server);
   this.printers = [];
@@ -94,4 +96,4 @@ const StartSocket = function (config) {
   this.logger.info(`Socket-Server running at: ${this.config.socketurl} Port: ${this.config.socketport}`);
 };
 
-module.exports = StartSocket;
+module.exports = SocketService;

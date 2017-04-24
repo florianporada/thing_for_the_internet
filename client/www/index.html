@@ -24,7 +24,7 @@
     <link href="css/ionic.app.css" rel="stylesheet">
 
     <!--socket io client library-->
-    <script src="https://noiseyairplanes.me:3030/socket.io/socket.io.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
 
     <!-- ionic/angularjs js -->
     <script src="lib/ionic/js/ionic.bundle.js"></script>
@@ -43,8 +43,9 @@
 
     <ion-pane>
       <ion-header-bar class="bar-postive">
+        <button class="button button-icon ion-person" ng-click="openNameModal()"></button>
         <h1 class="title">printr.</h1>
-        <button class="button button-icon ion-gear-a" ng-click="openNameModal()"></button>
+        <button class="button button-icon ion-gear-a" ng-click="openSettingsModal()"></button>
       </ion-header-bar>
       <ion-content>
         <ion-refresher
@@ -124,6 +125,54 @@
               <div ng-show="nameform.name.$invalid && !nameform.name.$pristine" class="card">
                 <div class="item item-text-wrap">
                   Name too short or too long
+                </div>
+              </div>
+            </div>
+          </form>
+        </ion-content>
+      </ion-modal-view>
+    </script>
+
+    <!-- Settings Modal -->
+    <script id="settings-modal.html" type="text/ng-template">
+      <ion-modal-view>
+        <ion-header-bar class="bar-dark">
+          <h1 class="title">Settings</h1>
+          <button class="button button-icon" ng-click="settingsModal.hide()">
+            <i class="icon ion-android-close"></i>
+          </button>
+        </ion-header-bar>
+        <ion-content>
+          <form name="settingsform" novalidate ng-submit="setSettings(settingsform.$valid)">
+            <div class="list list-inset">
+              <label class="item item-input item-select">
+                <div class="input-label">
+                  Protocol
+                </div>
+                <select name="protocol" ng-model="$root.settings.protocol" required>
+                  <option selected>https</option>
+                  <option>http</option>
+                </select>
+              </label>
+              <label class="item item-input">
+                <input name="socketurl" ng-model="$root.settings.socketurl" type="text" placeholder="noiseyairplanes.me" required ng-minlength="1" ng-maxlength="50">
+              </label>
+              <label class="item item-input">
+                <input name="socketport" ng-model="$root.settings.socketport" type="number" placeholder="3030" required ng-minlength="4" ng-maxlength="4">
+              </label>
+              <button type="submit" class="button button-block button-positive" ng-disabled="settingsform.$invalid">Save settings</button>
+              <div ng-show="settingsform.protocol.$invalid && !settingsform.protocol.$pristine" class="card">
+                <div class="item item-text-wrap">
+                  Select a protocol
+              </div>
+              <div ng-show="settingsform.socketport.$invalid && !settingsform.socketport.$pristine" class="card">
+                <div class="item item-text-wrap">
+                  Enter a valid socket port
+                </div>
+              </div>
+              <div ng-show="settingsform.socketurl.$invalid && !settingsform.socketurl.$pristine" class="card">
+                <div class="item item-text-wrap">
+                  Enter a valid socket url.
                 </div>
               </div>
             </div>

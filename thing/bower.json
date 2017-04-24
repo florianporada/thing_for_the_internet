@@ -1,0 +1,30 @@
+{
+  "name": "thing_for_the_internet_THING",
+  "description": "a thing for the internet",
+  "main": "app.js",
+  "authors": [
+    "florianporada"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "iot",
+    "internet",
+    "of",
+    "things",
+    "nodejs"
+  ],
+  "homepage": "https://github.com/florianporada/thing_for_the_internet",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "public/components/",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "trianglify": "^1.0.0"
+  }
+}

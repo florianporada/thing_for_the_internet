@@ -1,0 +1,79 @@
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>printr. - config</title>
+  <meta name="description" content="Configuration page for your printr.">
+  <meta name="author" content="florianporada">
+
+  <link rel="stylesheet" href="components/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/styles.css">
+
+  <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
+  <![endif]-->
+</head>
+
+<body>
+  <div class="container">
+	   <div class="row">
+		     <form class="col-xs-12 form-horizontal" onsubmit="return false;">
+            <fieldset>
+                <!-- Form Name -->
+                <legend>Configuration</legend>
+                <!-- Name input-->
+                <div id='info'></div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="name">Name</label>
+                    <div class="col-md-6">
+                        <input id="name" name="name" type="text" placeholder="Printy McPrintface" class="form-control input-md" required="">
+                    </div>
+                </div>
+                <!-- Passcode input-->
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="passcode">Passcode</label>
+                    <div class="col-md-6">
+                        <input id="passcode" name="passcode" type="password" placeholder="very safe passcode" class="form-control input-md" required="">
+                    </div>
+                </div>
+                <!-- protocol selection -->
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="protocol">Protocol</label>
+                    <div class="col-md-4">
+                        <select id="protocol" name="protocol" class="form-control">
+                            <option value="http">HTTP</option>
+                            <option value="https">HTTPS</option>
+                        </select>
+                    </div>
+                </div>
+                <!-- socketurl input-->
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="socketurl">Socketurl</label>
+                    <div class="col-md-6">
+                        <input id="socketurl" name="socketurl" type="text" placeholder="www.noiseyairplanes.me" class="form-control input-md" required="">
+                    </div>
+                </div>
+                <!-- socketport input-->
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="socketport">Socketport</label>
+                    <div class="col-md-6">
+                        <input id="socketport" name="socketport" type="number" placeholder="3333" class="form-control input-md" required="">
+                    </div>
+                </div>
+                <!-- Button (Double) -->
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="submitButton"></label>
+                    <div class="col-md-8">
+                        <input id="submitButton" type="submit" name="submitButton" class="btn btn-success" value="Save">
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+  	</div>
+  </div>
+  <script src="components/jquery/dist/jquery.min.js"></script>
+  <script src="components/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="components/trianglify/dist/trianglify.min.js"></script>
+  <script src="js/scripts.js"></script>
+</body>
+</html>

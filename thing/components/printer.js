@@ -1,12 +1,13 @@
 'use strict';
 
-const path = require('path')
+const path = require('path');
 
+const winston = require('winston');
 const PythonShell = require('python-shell');
 const datetime = require('node-datetime');
 
 const Printer = function () {
-  console.info('printer initialized');
+  winston.log('info', 'printer initialized');
 };
 
 Printer.prototype.print = function (data, cb) {
@@ -40,7 +41,7 @@ Printer.prototype.print = function (data, cb) {
 
   shell.on('message', message => {
     // received a message sent from the Python script (a simple "print" statement)
-    console.log(message);
+    winston.log('info', message);
   });
 
   // end the input stream and allow the process to exit

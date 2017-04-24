@@ -1,80 +1,92 @@
 'use strict';
 
-const config = require('./config');
-const gpio = require('rpi-gpio');
-const socket = require('socket.io-client')(`${config.protocol}://${config.socketurl}:${config.socketport}`);
+const winston = require('winston');
+//const gpio = require('rpi-gpio');
+const Socket = require('socket.io-client');
 const led = 12;
 
 const Printer = require('./components/printer');
+const Webserver = require('./components/webserver');
+const Db = require('./components/Db');
+
 const printer = new Printer();
+const webserver = new Webserver();
+const database = new Db();
 
-const ledSwitch = function (state) {
-  switch (state) {
-    case 'on':
-      gpio.write(led, true, err => {
-        if (err) {
-          console.log(err);
-        }
-      });
-      break;
-    case 'blink': {
-      let count = 0;
-      const intervalObject = setInterval(() => {
-        count += 1;
-        gpio.write(led, count % 2 === 0, err => {
-          if (err) {
-            console.log(err);
+database.init().then(() => {
+  webserver.start();
+
+  const config = database.getConfig();
+  const socket = new Socket(`${config.protocol}://${config.socketurl}:${config.socketport}`);
+
+  const ledSwitch = function (state) {
+    switch (state) {
+      case 'on':
+        // gpio.write(led, true, err => {
+        //   if (err) {
+        //     winston.log('error', err);
+        //   }
+        // });
+        break;
+      case 'blink': {
+        let count = 0;
+        const intervalObject = setInterval(() => {
+          count += 1;
+          // gpio.write(led, count % 2 === 0, err => {
+          //   if (err) {
+          //     winston.log('error', err);
+          //   }
+          // });
+
+          if (count === 10) {
+            clearInterval(intervalObject);
           }
-        });
+        }, 100);
 
-        if (count === 10) {
-          clearInterval(intervalObject);
-        }
-      }, 100);
-
-      break;
+        break;
+      }
+      case 'off':
+        // gpio.write(led, false, err => {
+        //   if (err) {
+        //     winston.log('error', err);
+        //   }
+        // });
+        break;
+      default:
     }
-    case 'off':
-      gpio.write(led, false, err => {
-        if (err) {
-          console.log(err);
-        }
-      });
-      break;
-    default:
-  }
-};
+  };
 
-socket.on('connect', () => {
-  gpio.setup(led, gpio.DIR_OUT, () => {
-    ledSwitch('on');
+  socket.on('connect', () => {
+    // gpio.setup(led, gpio.DIR_OUT, () => {
+    //   ledSwitch('on');
+    // });
+    winston.log('info', 'Connected');
+    socket.emit('register', {
+      name: `${config.name}`,
+      type: 'printer'
+    });
   });
-  console.log('Connected');
-  socket.emit('register', {
-    name: `${config.name}`,
-    type: 'printer'
+
+  socket.on('event', data => {
+    winston.log('info', 'Received: ', data);
   });
-});
 
-socket.on('event', data => {
-  console.log('Received: ', data);
-});
+  socket.on('printme', data => {
+    ledSwitch('blink');
+    if (socket.connected) {
+      ledSwitch('on');
+    } else {
+      ledSwitch('off');
+    }
 
-socket.on('printme', data => {
-  ledSwitch('blink');
-  if (socket.connected) {
-    ledSwitch('on');
-  } else {
+    printer.print(data.message, () => {
+      winston.log('info', data.content, data.from, data.meta);
+      socket.emit('printed', { clientId: data.clientId, printerId: data.printerId });
+    });
+  });
+
+  socket.on('disconnect', () => {
     ledSwitch('off');
-  }
-
-  printer.print(data.message, () => {
-    // console.log('printed', data.content, data.from, data.meta);
-    socket.emit('printed', { clientId: data.clientId, printerId: data.printerId });
+    winston.log('info', 'Connection closed');
   });
-});
-
-socket.on('disconnect', () => {
-  ledSwitch('off');
-  console.log('Connection closed');
 });

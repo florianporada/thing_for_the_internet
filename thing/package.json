@@ -25,11 +25,13 @@
   "homepage": "https://github.com/florianporada/thing_for_the_internet#readme",
   "dependencies": {
     "bcrypt": "^1.0.2",
+    "body-parser": "^1.17.1",
     "lowdb": "^0.16.2",
     "node-datetime": "^1.0.0",
     "python-shell": "^0.4.0",
     "rpi-gpio": "^0.7.0",
     "socket.io": "^1.7.3",
-    "socket.io-client": "^1.7.3"
+    "socket.io-client": "^1.7.3",
+    "winston": "^2.3.1"
   }
 }

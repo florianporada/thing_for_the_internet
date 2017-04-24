@@ -24,8 +24,20 @@ run($ionicPlatform => {
     }
   });
 }).
-factory('socket', socketFactory => {
-  const socket = io.connect('https://noiseyairplanes.me:3030/', { secure: true });
+factory('socket', (socketFactory, localStorageService) => {
+  let settings = {};
+
+  if (localStorageService.get('settings')) {
+    settings = localStorageService.get('settings');
+  } else {
+    settings = {
+      protocol: 'https',
+      socketurl: '127.0.0.1',
+      socketport: 8080
+    };
+  }
+
+  const socket = io.connect(`${settings.protocol}://${settings.socketurl}:${settings.socketport}/`, { secure: true });
   const mySocket = socketFactory({
     ioSocket: socket
   });
@@ -51,6 +63,20 @@ controller('MainCtrl', ($scope, $rootScope, $ionicModal, socket, localStorageSer
     });
   };
 
+  $rootScope.settings = {};
+  $rootScope.name = '';
+  $rootScope.content = '';
+  $rootScope.photo = '';
+  $scope.printers = [];
+
+  if (localStorageService.get('clientname')) {
+    $rootScope.name = localStorageService.get('clientname');
+  }
+
+  if (localStorageService.get('settings')) {
+    $rootScope.settings = localStorageService.get('settings');
+  }
+
   socket.emit('register', {
     name: localStorageService.get('clientname') ? localStorageService.get('clientname') : 'random client',
     type: 'client'
@@ -70,15 +96,6 @@ controller('MainCtrl', ($scope, $rootScope, $ionicModal, socket, localStorageSer
   socket.on('clientId', data => {
     clientId = data;
   });
-
-  $rootScope.name = '';
-  $rootScope.content = '';
-  $rootScope.photo = '';
-  $scope.printers = [];
-
-  if (localStorageService.get('clientname')) {
-    $rootScope.name = localStorageService.get('clientname');
-  }
 
   $scope.removePhoto = function () {
     $rootScope.photo = '';
@@ -140,10 +157,18 @@ controller('MainCtrl', ($scope, $rootScope, $ionicModal, socket, localStorageSer
       $rootScope.photo = '';
     }
   };
+
   $scope.setName = function (isValid) {
     if (isValid) {
       localStorageService.set('clientname', $rootScope.name);
       $scope.nameModal.hide();
+    }
+  };
+
+  $scope.setSettings = function (isValid) {
+    if (isValid) {
+      localStorageService.set('settings', $rootScope.settings);
+      $scope.settingsModal.hide();
     }
   };
 
@@ -169,6 +194,13 @@ controller('MainCtrl', ($scope, $rootScope, $ionicModal, socket, localStorageSer
     }
   });
 
+  $ionicModal.fromTemplateUrl('settings-modal.html', {
+    scope: $scope,
+    animation: 'slide-in-up'
+  }).then(modal => {
+    $scope.settingsModal = modal;
+  });
+
   $scope.openPrintModal = item => {
     $scope.printModal.show();
     activePrinter = item;
@@ -185,14 +217,21 @@ controller('MainCtrl', ($scope, $rootScope, $ionicModal, socket, localStorageSer
 
   $scope.closeNameModal = () => {
     $scope.nameModal.hide();
+  };
 
-    activePrinter = {};
+  $scope.openSettingsModal = () => {
+    $scope.settingsModal.show();
+  };
+
+  $scope.closeSettingsModal = () => {
+    $scope.settings.Modal.hide();
   };
 
   // Cleanup the modal when we're done with it!
   $scope.$on('$destroy', () => {
     $scope.printModal.remove();
     $scope.nameModal.remove();
+    $scope.settingsModal.remove();
   });
 
   // Execute action on hide modal
