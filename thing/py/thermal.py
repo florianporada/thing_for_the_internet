@@ -11,7 +11,7 @@ def read_in():
 
 def main():
     #create printer object
-    p = printer.ThermalPrinter(serialport='/dev/ttyAMA0')
+    p = printer.ThermalPrinter(serialport='/dev/ttyS0')
 
     #get our data as an array from read_in()
     lines = read_in()

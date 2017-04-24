@@ -11,7 +11,7 @@ const Printer = function () {
 };
 
 Printer.prototype.print = function (data, cb) {
-  const shell = new PythonShell(path.normalize('./py/thermal.py'));
+  const shell = new PythonShell(path.normalize(path.join('.', 'py', 'thermal.py')));
 
   data.from = data.from.replace(/\u00dc/g, 'Ue');
   data.from = data.from.replace(/\u00fc/g, 'ue');

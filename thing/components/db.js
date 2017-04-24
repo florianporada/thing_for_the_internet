@@ -6,7 +6,7 @@ const winston = require('winston');
 const low = require('lowdb');
 const bcrypt = require('bcrypt');
 
-const initConfig = require('../config.js');
+const initConfig = require(path.join(__dirname, '..', 'config.js'));
 const dbPath = path.join(__dirname, '..', 'db.json');
 const db = low(dbPath);
 

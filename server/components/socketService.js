@@ -12,10 +12,6 @@ const options = {
 };
 
 const SocketService = function (config) {
-  if (!(this instanceof StartSocket)) {
-    return new StartSocket(config);
-  }
-
   this.config = config;
   this.logger = flaschenpost.getLogger();
   this.server = https.createServer(options, (req, res) => {
@@ -46,6 +42,7 @@ SocketService.prototype.start = function () {
       if (opt.type === 'printer') {
         client.name = opt.name;
         client.type = opt.type;
+        client.uid = opt.uid;
         this.printers.push(client);
         this.logger.info(`printer ${opt.name} registered`);
       }
