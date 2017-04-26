@@ -15,7 +15,7 @@ Install guide.
   ```
 - restart your pi
 - open a hotspot with `SSID: printrconfig` `PSK: 1234567890`
-- go to http://<IP_ADDRESS_OF_THE_PI>:8888/
+- go to `http://<IP_ADDRESS_OF_THE_PI>:8888/`
 - configure the printr.
 - restart your pi
 - finish
