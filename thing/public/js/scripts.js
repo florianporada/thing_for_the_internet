@@ -32,7 +32,7 @@
   };
 
   const initUpdateConfig = function () {
-    $('#submitButton1').click(() => {
+    $('#submitButton0,#submitButton1').click(() => {
       const form = $('#printerConf')[0];
 
       if (form.checkValidity()) {

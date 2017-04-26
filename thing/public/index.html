@@ -16,11 +16,17 @@
 
 <body>
   <div class="container">
-	   <div class="row">
+      <div class="row">
+        <div class="col-xs-12">
+          <h1>printr.<h1/>
+          <h4>configuration<h4/>
+        </div>
+      </div>
+      <div class="row">
 		     <form id="printerConf" class="col-xs-12 form-horizontal" onsubmit="return false;">
             <fieldset>
                 <!-- Form Name -->
-                <legend>Configuration</legend>
+                <legend>server</legend>
                 <!-- Name input-->
                 <div id='info1'></div>
                 <div class="form-group">
@@ -60,6 +66,14 @@
                         <input id="socketport" name="socketport" type="number" placeholder="3333" class="form-control input-md" required="">
                     </div>
                 </div>
+                <!-- Button -->
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="submitButton0"></label>
+                    <div class="col-md-8">
+                        <input id="submitButton0" type="submit" name="submitButton0" class="btn btn-success" value="Save">
+                    </div>
+                </div>
+                <legend>printer</legend>
                 <!-- serialport selection -->
                 <div class="form-group">
                     <label class="col-md-4 control-label" for="serialport">Serialport</label>
@@ -78,7 +92,7 @@
                 </div>
                 <!-- Button -->
                 <div class="form-group">
-                    <label class="col-md-4 control-label" for="submitButton2"></label>
+                    <label class="col-md-4 control-label" for="submitButton1"></label>
                     <div class="col-md-8">
                         <input id="submitButton1" type="submit" name="submitButton1" class="btn btn-success" value="Save">
                     </div>
@@ -93,7 +107,6 @@
                <legend> WiFi Configuration</legend>
                <!-- Name input-->
                <div id='info2'></div>
-               <div class="form-group">
                <!-- ssid input-->
                <div class="form-group">
                    <label class="col-md-4 control-label" for="socketurl">SSID</label>
