@@ -1,8 +1,10 @@
-body {
-  background-repeat: no-repeat;
-  background-size: cover;
-}
-
 legend {
   text-align: center;
+}
+
+.trianglify-bg {
+  height: 150px;
+  margin-bottom: 15px;
+  background-repeat: no-repeat;
+  background-size: cover;
 }

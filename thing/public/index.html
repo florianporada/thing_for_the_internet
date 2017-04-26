@@ -15,11 +15,18 @@
 </head>
 
 <body>
+  <div class="container-fluid trianglify-bg">
+    <div class="row">
+      <div class="col-xs-12">
+        <h1>printr.</h1>
+        <h4>configuration</h4>
+      </div>
+    </div>
+  </div>
   <div class="container">
       <div class="row">
         <div class="col-xs-12">
-          <h1>printr.<h1/>
-          <h4>configuration<h4/>
+          <input id="resetButton" type="button" name="resetButton" class="btn btn-warning pull-right" value="Reset">
         </div>
       </div>
       <div class="row">
@@ -27,21 +34,7 @@
             <fieldset>
                 <!-- Form Name -->
                 <legend>server</legend>
-                <!-- Name input-->
                 <div id='info1'></div>
-                <div class="form-group">
-                    <label class="col-md-4 control-label" for="name">Name</label>
-                    <div class="col-md-6">
-                        <input id="name" name="name" type="text" placeholder="Printy McPrintface" class="form-control input-md" required="">
-                    </div>
-                </div>
-                <!-- Passcode input-->
-                <div class="form-group">
-                    <label class="col-md-4 control-label" for="passcode">Passcode</label>
-                    <div class="col-md-6">
-                        <input id="passcode" name="passcode" type="password" placeholder="very safe passcode" class="form-control input-md" required="">
-                    </div>
-                </div>
                 <!-- protocol selection -->
                 <div class="form-group">
                     <label class="col-md-4 control-label" for="protocol">Protocol</label>
@@ -74,6 +67,20 @@
                     </div>
                 </div>
                 <legend>printer</legend>
+                <!-- Name input-->
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="name">Name</label>
+                    <div class="col-md-6">
+                        <input id="name" name="name" type="text" placeholder="Printy McPrintface" class="form-control input-md" required="">
+                    </div>
+                </div>
+                <!-- Passcode input-->
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="passcode">Passcode</label>
+                    <div class="col-md-6">
+                        <input id="passcode" name="passcode" type="password" placeholder="very safe passcode" class="form-control input-md" required="">
+                    </div>
+                </div>
                 <!-- serialport selection -->
                 <div class="form-group">
                     <label class="col-md-4 control-label" for="serialport">Serialport</label>

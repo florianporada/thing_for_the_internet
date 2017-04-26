@@ -23,7 +23,7 @@ Db.prototype.init = function () {
       size().
       value();
 
-    if (!configExists && configSize === 0) {
+    if (!configExists || configSize === 0) {
       winston.log('info', 'no config found, write default config to db');
 
       bcrypt.hash(initConfig.passcode, 10, (err, hash) => {
@@ -106,6 +106,12 @@ Db.prototype.updateConfig = function (data) {
       }).
       write();
   }
+};
+
+Db.prototype.resetConfig = function () {
+  db.get('config').
+    remove({ id: 1 }).
+    write();
 };
 
 Db.prototype.checkPasscode = function (passcode) {

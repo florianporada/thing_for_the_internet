@@ -3,11 +3,11 @@
 (function () {
   const initSite = function () {
     const pattern = Trianglify({
-      width: window.innerWidth,
-      height: window.innerHeight
+      width: $('.trianglify-bg').outerWidth(),
+      height: $('.trianglify-bg').outerHeight()
     });
 
-    $('body').css('background-image', `url(${pattern.png()}`);
+    $('.trianglify-bg').css('background-image', `url(${pattern.png()}`);
   };
 
   const initGetConfig = function () {
@@ -38,11 +38,11 @@
       if (form.checkValidity()) {
         const formData = $('#printerConf').serializeArray();
         const data = {
-          name: formData[0].value,
-          passcode: formData[1].value,
-          protocol: formData[2].value,
-          socketurl: formData[3].value,
-          socketport: formData[4].value,
+          protocol: formData[0].value,
+          socketurl: formData[1].value,
+          socketport: formData[2].value,
+          name: formData[3].value,
+          passcode: formData[4].value,
           serialport: formData[5].value,
           baudrate: formData[6].value
         };
@@ -76,10 +76,24 @@
     });
   };
 
+  const initResetConfig = function () {
+    $('#resetButton').click(() => {
+      if (confirm("Are you sure?")) {
+        $.post('api/resetConfig', {}).
+          done(res => {
+            $('#info1').
+              empty().
+              append(`<div class="alert alert-success"><strong>Yeah!</strong> Reset configuration successfully. ${res}</div>`);
+          });
+      }
+    });
+  };
+
   const initScript = function () {
     initSite();
     initGetConfig();
     initUpdateConfig();
+    initResetConfig();
   };
 
   initScript();

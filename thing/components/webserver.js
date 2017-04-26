@@ -33,6 +33,13 @@ Webserver.prototype.start = function () {
     res.send('OK');
   });
 
+  app.post('/api/resetConfig', (req, res) => {
+    this.database.resetConfig();
+    this.database.init().then(() => {
+      res.send('OK');
+    });
+  });
+
   app.post('/api/updateWifiConfig', (req, res) => {
     const shell = new PythonShell(path.normalize(path.join('.', 'py', 'wifi_config.py')));
 
