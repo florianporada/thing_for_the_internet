@@ -17,12 +17,12 @@
 <body>
   <div class="container">
 	   <div class="row">
-		     <form class="col-xs-12 form-horizontal" onsubmit="return false;">
+		     <form id="printerConf" class="col-xs-12 form-horizontal" onsubmit="return false;">
             <fieldset>
                 <!-- Form Name -->
                 <legend>Configuration</legend>
                 <!-- Name input-->
-                <div id='info'></div>
+                <div id='info1'></div>
                 <div class="form-group">
                     <label class="col-md-4 control-label" for="name">Name</label>
                     <div class="col-md-6">
@@ -40,7 +40,7 @@
                 <div class="form-group">
                     <label class="col-md-4 control-label" for="protocol">Protocol</label>
                     <div class="col-md-4">
-                        <select id="protocol" name="protocol" class="form-control">
+                        <select id="protocol" name="protocol" class="form-control" required="">
                             <option value="http">HTTP</option>
                             <option value="https">HTTPS</option>
                         </select>
@@ -60,16 +60,64 @@
                         <input id="socketport" name="socketport" type="number" placeholder="3333" class="form-control input-md" required="">
                     </div>
                 </div>
-                <!-- Button (Double) -->
+                <!-- serialport selection -->
                 <div class="form-group">
-                    <label class="col-md-4 control-label" for="submitButton"></label>
+                    <label class="col-md-4 control-label" for="serialport">Serialport</label>
+                    <div class="col-md-4">
+                        <select id="serialport" name="serialport" class="form-control" required="">
+                            <option value="0">no port found</option>
+                        </select>
+                    </div>
+                </div>
+                <!-- baudrate input-->
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="baudrate">Baudrate</label>
+                    <div class="col-md-6">
+                        <input id="baudrate" name="baudrate" type="number" placeholder="9600" class="form-control input-md" required="">
+                    </div>
+                </div>
+                <!-- Button -->
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="submitButton2"></label>
                     <div class="col-md-8">
-                        <input id="submitButton" type="submit" name="submitButton" class="btn btn-success" value="Save">
+                        <input id="submitButton1" type="submit" name="submitButton1" class="btn btn-success" value="Save">
                     </div>
                 </div>
             </fieldset>
         </form>
   	</div>
+    <div class="row">
+        <form id="wifiConf" class="col-xs-12 form-horizontal" onsubmit="return false;">
+           <fieldset>
+               <!-- Form Name -->
+               <legend> WiFi Configuration</legend>
+               <!-- Name input-->
+               <div id='info2'></div>
+               <div class="form-group">
+               <!-- ssid input-->
+               <div class="form-group">
+                   <label class="col-md-4 control-label" for="socketurl">SSID</label>
+                   <div class="col-md-6">
+                       <input id="ssid" name="ssid" type="text" placeholder="ssid" class="form-control input-md" required="">
+                   </div>
+               </div>
+               <!-- psk input-->
+               <div class="form-group">
+                   <label class="col-md-4 control-label" for="psk">PSK</label>
+                   <div class="col-md-6">
+                       <input id="psk" name="psk" type="password" placeholder="444" class="form-control input-md" required="">
+                   </div>
+               </div>
+               <!-- Button -->
+               <div class="form-group">
+                   <label class="col-md-4 control-label" for="submitButton2"></label>
+                   <div class="col-md-8">
+                       <input id="submitButton2" type="submit" name="submitButton2" class="btn btn-success" value="Save">
+                   </div>
+               </div>
+           </fieldset>
+       </form>
+     </div>
   </div>
   <script src="components/jquery/dist/jquery.min.js"></script>
   <script src="components/bootstrap/dist/js/bootstrap.min.js"></script>

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-import sys, json, printer, textwrap, PIL, base64
+import sys, json, printer, textwrap, base64, os, PIL
 
 #Read data from stdin
 def read_in():
@@ -9,9 +9,27 @@ def read_in():
     # Since our input would only be having one line, parse our JSON data from that
     return json.loads(lines[0])
 
+def get_serialport():
+    fn = os.path.abspath('./db.json')
+    with open(fn) as data_file:
+        data = json.load(data_file)
+
+    return data['config'][0]['serialport']
+
+def get_baudrate():
+    fn = os.path.abspath('./db.json')
+    with open(fn) as data_file:
+        data = json.load(data_file)
+
+    return int(data['config'][0]['baudrate'])
+
+
 def main():
+    serialport = get_serialport()
+    baudrate = get_baudrate()
+
     #create printer object
-    p = printer.ThermalPrinter(serialport='/dev/ttyS0')
+    p = printer.ThermalPrinter(serialport=serialport, baudrate=baudrate)
 
     #get our data as an array from read_in()
     lines = read_in()

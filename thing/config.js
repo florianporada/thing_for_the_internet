@@ -8,5 +8,6 @@ config.name = 'Printy McPrintface';
 config.protocol = 'https';
 config.socketurl = process.env.SOCKET_URL || 'noiseyairplanes.me';
 config.socketport = process.env.SOCKET_PORT || '3030';
+config.baudrate = 9600;
 
 module.exports = config;
