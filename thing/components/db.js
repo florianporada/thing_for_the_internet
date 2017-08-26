@@ -12,6 +12,7 @@ const dbPath = path.join(__dirname, '..', 'db.json');
 const db = low(dbPath);
 
 const Db = function () {
+  winston.log('info', 'db initialized');
 };
 
 Db.prototype.init = function () {

@@ -8,10 +8,12 @@ const led = 12;
 const Printer = require('./components/printer');
 const Webserver = require('./components/webserver');
 const Db = require('./components/db');
+const Localprint = require('./components/Localprint');
 
 const printer = new Printer();
 const webserver = new Webserver();
 const database = new Db();
+const localprint = new Localprint();
 
 const ledSwitch = function (state) {
   switch (state) {
@@ -90,4 +92,6 @@ database.init().then(() => {
     ledSwitch('off');
     winston.log('info', 'Connection closed');
   });
+
+  setTimeout(localprint.start(), 2000);
 });
