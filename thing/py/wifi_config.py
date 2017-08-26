@@ -17,7 +17,6 @@ def main():
     hs.write('network={\n')
     hs.write('\tssid="' + lines['ssid'] + '"\n')
     hs.write('\tpsk="' + lines['psk'] + '"\n')
-    hs.write('\tkey_mgmt=WPA-PSK\n')
     hs.write('}')
     hs.close()
 
