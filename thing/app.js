@@ -8,7 +8,7 @@ const led = 12;
 const Printer = require('./components/printer');
 const Webserver = require('./components/webserver');
 const Db = require('./components/db');
-const Localprint = require('./components/Localprint');
+const Localprint = require('./components/localprint');
 
 const printer = new Printer();
 const webserver = new Webserver();
@@ -71,17 +71,18 @@ database.init().then(() => {
   });
 
   socket.on('event', data => {
-    winston.log('info', 'Received: ', data);
+    winston.log('info', 'event: ', data);
   });
 
   socket.on('printme', data => {
+    winston.log('info', 'printme: ', data);
+
     ledSwitch('blink');
     if (socket.connected) {
       ledSwitch('on');
     } else {
       ledSwitch('off');
     }
-
     printer.print(data.message, () => {
       winston.log('info', data.content, data.from, data.meta);
       socket.emit('printed', { clientId: data.clientId, printerId: data.printerId });
@@ -93,5 +94,5 @@ database.init().then(() => {
     winston.log('info', 'Connection closed');
   });
 
-  setTimeout(localprint.start(), 2000);
+  localprint.start();
 });
