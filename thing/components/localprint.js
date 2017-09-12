@@ -11,10 +11,14 @@ const Localprint = function () {
   winston.log('info', 'localprint initialized');
 };
 
-Localprint.prototype.start = function () {
+Localprint.prototype.start = function (path) {
+  if (!path || path === '') {
+    return winston.log('error', 'string is empty');
+  }
+
   const items = [ 'schere', 'stein', 'papier' ];
 
-  fs.readFile('./application.png', (err, imgData) => {
+  fs.readFile(path, (err, imgData) => {
     if (err) {
       return winston.log('error', 'error while reading local image file');
     }

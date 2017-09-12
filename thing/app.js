@@ -94,5 +94,5 @@ database.init().then(() => {
     winston.log('info', 'Connection closed');
   });
 
-  localprint.start();
+  localprint.start('./printout.jpg');
 });
