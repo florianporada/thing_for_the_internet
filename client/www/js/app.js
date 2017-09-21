@@ -32,9 +32,11 @@ factory('socket', (socketFactory, localStorageService) => {
   } else {
     settings = {
       protocol: 'https',
-      socketurl: '127.0.0.1',
-      socketport: 8080
+      socketurl: 'noiseyairplanes.me',
+      socketport: 3030
     };
+
+    localStorageService.set('settings', settings);
   }
 
   const socket = io.connect(`${settings.protocol}://${settings.socketurl}:${settings.socketport}/`, { secure: true });
