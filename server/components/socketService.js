@@ -66,6 +66,10 @@ SocketService.prototype.start = function () {
         return this.logger.error('No receiver connected');
       }
 
+      if (!data) {
+        return this.logger.error('No payload');
+      }
+
       for (let i = 0, len = this.receivers.length; i < len; i++) {
         if (this.receivers[i].id === data.receiverId) {
           this.logger.info('signalToReceiver', { data });
