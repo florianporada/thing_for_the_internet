@@ -32,7 +32,7 @@ database.init().then(() => {
   });
 
   socket.on('signalToReceiver', data => {
-    winston.log('info', 'recieved: ', { data });
+    // winston.log('info', 'recieved: ', { data });
     socket.emit('received', { clientId: data.clientId, receiverId: data.receiverId });
 
     switch (data.payload.event) {
@@ -42,6 +42,10 @@ database.init().then(() => {
         break;
       case 'blinkStop':
         winston.log('info', 'stopBlinking');
+
+        break;
+      case 'movement':
+        winston.log('info', 'movement', data);
 
         break;
       default:
