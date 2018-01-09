@@ -18,6 +18,8 @@ const View = styled.View`
   background-color: #525252;
   height: 300;
   border-radius: 5;
+  margin-top: 5;
+  margin-bottom: 5;
 `
 
 const toPercentage = (value: number, base: number) => {

@@ -44,14 +44,12 @@ const Text = styled.Text`
   color: #525252;
 `;
 
+type Props = {};
 
-
-type Props = {
-
-};
+type State = {};
 
 export default class App extends Component<Props, State> {
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
 
     this.state = {
@@ -107,6 +105,17 @@ export default class App extends Component<Props, State> {
 
   onTouchMove(x: number, y: number) {
     this.setState({ x, y });
+    this.socket.emit('signalFromClient', {
+      receiverId: this.state.receiver.id,
+      clientId: this.socket.id,
+      payload: {
+        event: 'movement',
+        data: {
+          x,
+          y,
+        }
+      }
+    });
   }
 
   renderLoading() {
@@ -118,7 +127,7 @@ export default class App extends Component<Props, State> {
   }
 
   render() {
-    { if (!this.state.connected || !this.state.receiver) { return this.renderLoading(); }}
+    if (!this.state.connected || !this.state.receiver) return this.renderLoading();
     return (
       <Container>
         <Text>Connected to: {this.state.receiver.name}</Text>
@@ -136,7 +145,7 @@ export default class App extends Component<Props, State> {
           <Button>
             <Text>something else..</Text>
           </Button>
-          <Trackpad onTouchMove={({ x, y }) => { this.onTouchMove(x, y); }}/>
+          <Trackpad onTouchMove={({ x, y }) => { this.onTouchMove(x, y); }} />
         </ButtonGroup>
         <Branding>
           <Image
