@@ -5,14 +5,13 @@ import styled from 'styled-components/native';
 
 type Props = {
   onPressIn: Function,
-  onPressOut: Function,
-  children: any,
+  onPressOut?: Function,
+  children: any
 };
 
 const View = styled.View`
   border-radius: 5;
   border-width: 1;
-  border-style: solid;
   border-color: #525252
   padding-top: 15;
   padding-right: 15;
@@ -24,13 +23,8 @@ const View = styled.View`
 
 const Button = (props: Props) => {
   return (
-    <TouchableOpacity
-      onPressIn={props.onPressIn}
-      onPressOut={props.onPressOut}
-    >
-      <View>
-        {props.children}
-      </View>
+    <TouchableOpacity onPressIn={props.onPressIn} onPressOut={props.onPressOut}>
+      <View>{props.children}</View>
     </TouchableOpacity>
   );
 };
