@@ -7,12 +7,14 @@ import Button from './Button';
 
 const View = styled.View`
   flex: 1;
+  background-color: #1c1c1c;
   margin-horizontal: 20;
   margin-vertical: 20;
   padding-horizontal: 20;
   padding-vertical: 20;
   border-radius: 5;
-  background-color: #1c1c1c;
+  border-width: 1;
+  border-color: #525252;
 `;
 
 const ColorWrapper = styled.View`
@@ -31,6 +33,7 @@ const Text = styled.Text`
 `;
 
 type Props = {
+  onSend: Function,
   onClose: Function
 };
 
@@ -47,7 +50,7 @@ class ColorPicker extends Component<Props, State> {
     this.state = {
       color1: '',
       color2: '',
-      status: 'Pick color first'
+      status: 'Pick color first before hitting that button'
     };
   }
 
@@ -76,15 +79,19 @@ class ColorPicker extends Component<Props, State> {
     }
   }
 
-  onPressClose() {
+  onPressSend() {
     const { color1, color2 } = this.state;
     if (color1) {
       if (!color2) {
-        this.props.onClose({ color1, color2: color1 });
+        this.props.onSend({ color1, color2: color1 });
       } else {
-        this.props.onClose({ color1, color2 });
+        this.props.onSend({ color1, color2 });
       }
     }
+  }
+
+  onPressClose() {
+    this.props.onClose();
   }
 
   render() {
@@ -96,8 +103,11 @@ class ColorPicker extends Component<Props, State> {
           <Color color={color1 || 'transparent'} />
           <Color color={color2 || 'transparent'} />
         </ColorWrapper>
-        <Button onPressIn={() => this.onPressClose()}>
+        <Button onPressOut={() => this.onPressSend()}>
           <Text>{this.state.status}</Text>
+        </Button>
+        <Button onPressOut={() => this.onPressClose()}>
+          <Text>Close</Text>
         </Button>
       </View>
     );

@@ -1,16 +1,16 @@
 /* @flow */
 import React, { Component } from 'react';
 import { PanResponder, Dimensions } from 'react-native';
-import styled from "styled-components/native";
+import styled from 'styled-components/native';
 
 type Props = {
-  onTouchMove: Function,
+  onTouchMove: Function
 };
 
 type State = {
   dimensions: {
     width: number,
-    height: number,
+    height: number
   }
 };
 
@@ -20,22 +20,24 @@ const View = styled.View`
   border-radius: 5;
   margin-top: 5;
   margin-bottom: 5;
-`
+`;
 
 const toPercentage = (value: number, base: number) => {
-  return ~~((value / base) * 100);
+  return ~~(value / base * 100);
 };
 
-class Trackpad extends Component<Props, State> {
+class TrackPad extends Component<Props, State> {
+  panResponder: any;
+
   constructor(props: Props) {
     super(props);
 
     this.state = {
       dimensions: {
         height: 300,
-        width: (Dimensions.get('window').width - 10)
+        width: Dimensions.get('window').width - 10
       }
-    }
+    };
   }
 
   componentWillMount() {
@@ -48,16 +50,14 @@ class Trackpad extends Component<Props, State> {
 
         if (x > 100 || x < 0 || y > 100 || y < 0) return false;
 
-        this.props.onTouchMove({ x, y })
-      },
+        this.props.onTouchMove({ x, y });
+      }
     });
-  };
+  }
 
   render() {
-    return (
-      <View {...this.panResponder.panHandlers} />
-    );
+    return <View {...this.panResponder.panHandlers} />;
   }
-};
+}
 
-export default Trackpad;
+export default TrackPad;

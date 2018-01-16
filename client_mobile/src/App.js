@@ -6,8 +6,9 @@ import styled from 'styled-components/native';
 
 import { SOCKET_URL, SOCKET_PORT } from './config';
 import Button from './components/Button';
-import Trackpad from './components/Trackpad';
-import Colorpicker from './components/Colorpicker';
+import TrackPad from './components/TrackPad';
+import ColorPicker from './components/ColorPicker';
+import VideoList from './components/VideoList';
 
 const Branding = styled.View`
   flex-direction: row;
@@ -53,7 +54,8 @@ type State = {
   x: number,
   y: number,
   status: string,
-  modalVisible: boolean
+  colorModalVisible: boolean,
+  listModalVisible: boolean
 };
 
 export default class App extends Component<Props, State> {
@@ -68,7 +70,8 @@ export default class App extends Component<Props, State> {
       x: 0,
       y: 0,
       status: 'loading...',
-      modalVisible: false
+      colorModalVisible: false,
+      listModalVisible: false
     };
 
     this.socket = io.connect(`${SOCKET_URL}:${SOCKET_PORT}`, { transports: ['websocket'] });
@@ -114,14 +117,12 @@ export default class App extends Component<Props, State> {
     });
   }
 
-  onColorButtonPressIn() {
-    this.setState({
-      modalVisible: true
-    });
+  onColorButtonPress() {
+    this.setState({ colorModalVisible: true });
   }
 
-  onModalClose({ color1, color2 }: { color1: string, color2: string }) {
-    this.setState({ modalVisible: false });
+  onColorModalClose({ color1, color2 }: { color1: string, color2: string }) {
+    this.setState({ colorModalVisible: false });
     this.socket.emit('signalFromClient', {
       receiverId: this.state.receiver.id,
       clientId: this.socket.id,
@@ -130,6 +131,29 @@ export default class App extends Component<Props, State> {
         data: {
           color1,
           color2
+        }
+      }
+    });
+  }
+
+  onVideoListButtonPress() {
+    this.setState({ listModalVisible: true });
+  }
+
+  onListModalClose() {
+    this.setState({ listModalVisible: false });
+  }
+
+  onListModalItemClose(item: Object) {
+    this.setState({ listModalVisible: false });
+    this.socket.emit('signalFromClient', {
+      receiverId: this.state.receiver.id,
+      clientId: this.socket.id,
+      payload: {
+        event: 'animation',
+        data: {
+          name: item.name,
+          filename: item.filename
         }
       }
     });
@@ -162,8 +186,19 @@ export default class App extends Component<Props, State> {
     if (!this.state.connected || !this.state.receiver) return this.renderLoading();
     return (
       <Container>
-        <Modal visible={this.state.modalVisible} animationType={'slide'} transparent>
-          <Colorpicker onClose={this.onModalClose.bind(this)} />
+        <Modal visible={this.state.colorModalVisible} animationType={'slide'} transparent>
+          <ColorPicker
+            onClose={() => {
+              this.setState({ colorModalVisible: false });
+            }}
+            onSend={this.onColorModalClose.bind(this)}
+          />
+        </Modal>
+        <Modal visible={this.state.listModalVisible} animationType={'slide'} transparent>
+          <VideoList
+            onClose={this.onListModalClose.bind(this)}
+            onPressItem={this.onListModalItemClose.bind(this)}
+          />
         </Modal>
         <Text>Connected to: {this.state.receiver.name}</Text>
         <Text>
@@ -176,13 +211,13 @@ export default class App extends Component<Props, State> {
           >
             <Text>Blink</Text>
           </Button>
-          <Button onPressIn={this.onColorButtonPressIn.bind(this)}>
+          <Button onPressOut={this.onColorButtonPress.bind(this)}>
             <Text>Color</Text>
           </Button>
-          {/* <Button onPressIn={this.onBlinkButtonPressIn.bind(this)}>
-            <Text>something else..</Text>
-          </Button> */}
-          <Trackpad
+          <Button onPressOut={this.onVideoListButtonPress.bind(this)}>
+            <Text>Animtions</Text>
+          </Button>
+          <TrackPad
             onTouchMove={({ x, y }) => {
               this.onTouchMove(x, y);
             }}

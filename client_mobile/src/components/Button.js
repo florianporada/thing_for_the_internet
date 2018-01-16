@@ -4,7 +4,7 @@ import { TouchableOpacity } from 'react-native';
 import styled from 'styled-components/native';
 
 type Props = {
-  onPressIn: Function,
+  onPressIn?: Function,
   onPressOut?: Function,
   children: any
 };
