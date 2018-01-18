@@ -19,9 +19,11 @@ const View = styled.View`
 
 const ColorWrapper = styled.View`
   flex-direction: row;
+  padding-bottom: 10;
 `;
 
 const Color = styled.View`
+  border-radius: 5;
   flex: 1;
   height: 40;
   background-color: ${props => props.color};
@@ -72,21 +74,11 @@ class ColorPicker extends Component<Props, State> {
 
     if (this.state.color1 && this.state.color2) {
       console.log(color);
+      this.props.onSend({ color1: this.state.color1, color2: this.state.color2 });
       this.setState({
-        color1: color,
+        color1: '',
         color2: ''
       });
-    }
-  }
-
-  onPressSend() {
-    const { color1, color2 } = this.state;
-    if (color1) {
-      if (!color2) {
-        this.props.onSend({ color1, color2: color1 });
-      } else {
-        this.props.onSend({ color1, color2 });
-      }
     }
   }
 
@@ -103,9 +95,6 @@ class ColorPicker extends Component<Props, State> {
           <Color color={color1 || 'transparent'} />
           <Color color={color2 || 'transparent'} />
         </ColorWrapper>
-        <Button onPressOut={() => this.onPressSend()}>
-          <Text>{this.state.status}</Text>
-        </Button>
         <Button onPressOut={() => this.onPressClose()}>
           <Text>Close</Text>
         </Button>

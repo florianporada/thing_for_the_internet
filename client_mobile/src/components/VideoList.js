@@ -31,42 +31,21 @@ const Text = styled.Text`
 
 type Props = {
   onClose: Function,
-  onPressItem: Function
+  onPressItem: Function,
+  animations: Array<Object>
 };
 
 type State = {
-  videos: Array<Object>,
+  animations: Array<Object>,
   status: string
 };
 
-class ColorPicker extends Component<Props, State> {
+class VideoList extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
     this.state = {
-      videos: [
-        {
-          key: 0,
-          name: 'Identifikation',
-          filename: 'https://media.w3.org/2010/05/sintel/trailer_hd.mp4'
-        },
-        {
-          key: 1,
-          name: 'Moovel Logo',
-          filename: 'http://techslides.com/demos/sample-videos/small.mp4'
-        },
-        { key: 2, name: 'Timer Füllstand', filename: '' },
-        { key: 3, name: 'Rotes Stoppen', filename: '' },
-        { key: 4, name: 'Timer rotierend', filename: '' },
-        { key: 5, name: 'Konversation Hey', filename: '' },
-        { key: 6, name: 'Konversation OK', filename: '' },
-        { key: 7, name: 'Blaues Atmen', filename: '' },
-        { key: 8, name: 'Weißes Atmen', filename: '' },
-        { key: 9, name: 'Rotes Stoppen', filename: '' },
-        { key: 10, name: 'Abbremsen', filename: '' },
-        { key: 11, name: 'Anfahren', filename: '' },
-        { key: 12, name: 'Winken', filename: '' }
-      ],
+      animations: props.animations,
       status: 'Pick video first'
     };
   }
@@ -84,10 +63,10 @@ class ColorPicker extends Component<Props, State> {
       <View>
         <ScrollView>
           <FlatList
-            data={this.state.videos}
-            renderItem={({ item }) => (
+            data={this.state.animations}
+            renderItem={({ item, index }) => (
               <ItemWrapper>
-                <Button onPressOut={() => this.onPressItem(item)}>
+                <Button onPressOut={() => this.onPressItem({ ...item, index })}>
                   <Text>{item.name}</Text>
                 </Button>
               </ItemWrapper>
@@ -102,4 +81,4 @@ class ColorPicker extends Component<Props, State> {
   }
 }
 
-export default ColorPicker;
+export default VideoList;

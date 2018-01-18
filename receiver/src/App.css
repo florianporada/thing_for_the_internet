@@ -1,10 +1,24 @@
+#root {
+  background-color: black;
+}
+
 .App {
   display: flex;
   text-align: center;
   justify-content: center;
   height: 100vh;
-  width: 100vw;
-  background-color: black;
+  width: 100vh;
+  border-radius: 9999px;
+  transition: "2s all";
+  overflow: hidden;
+}
+
+.dark {
+  background-color: black !important;
+}
+
+.light {
+  background-color: white !important;
 }
 
 .App-title {
@@ -31,6 +45,24 @@
 
 .rh5v-DefaultPlayer_component {
   width: 100vw;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }
 
 @keyframes App-logo-spin {

@@ -41,6 +41,10 @@ const ButtonGroup = styled.View`
   align-items: stretch;
 `;
 
+const VideoButtons = styled.View`
+  flex-direction: row;
+`;
+
 const Text = styled.Text`
   text-align: center;
   color: #525252;
@@ -55,7 +59,9 @@ type State = {
   y: number,
   status: string,
   colorModalVisible: boolean,
-  listModalVisible: boolean
+  listModalVisible: boolean,
+  animations: Array<Object>,
+  currentAnimationListIndex: number
 };
 
 export default class App extends Component<Props, State> {
@@ -71,7 +77,9 @@ export default class App extends Component<Props, State> {
       y: 0,
       status: 'loading...',
       colorModalVisible: false,
-      listModalVisible: false
+      listModalVisible: false,
+      animations: [],
+      currentAnimationListIndex: 0
     };
 
     this.socket = io.connect(`${SOCKET_URL}:${SOCKET_PORT}`, { transports: ['websocket'] });
@@ -83,10 +91,21 @@ export default class App extends Component<Props, State> {
       this.socket.emit('getReceivers');
     });
 
+    this.socket.on('animationList', data => {
+      this.setState({
+        animations: data.animationList
+      });
+    });
+
     this.socket.on('receiverList', data => {
       if (data.length > 0) {
         this.setState({
           receiver: data[0]
+        });
+
+        this.socket.emit('getAnimationList', {
+          receiverId: this.state.receiver.id,
+          clientId: this.socket.id
         });
       } else {
         this.setState({
@@ -140,12 +159,38 @@ export default class App extends Component<Props, State> {
     this.setState({ listModalVisible: true });
   }
 
+  onPressNext() {
+    if (this.state.currentAnimationListIndex === this.state.animations.length - 1) {
+      this.setState({
+        currentAnimationListIndex: 0
+      });
+    } else {
+      this.setState({
+        currentAnimationListIndex: this.state.currentAnimationListIndex + 1
+      });
+    }
+
+    console.log(this.state.currentAnimationListIndex);
+
+    this.socket.emit('signalFromClient', {
+      receiverId: this.state.receiver.id,
+      clientId: this.socket.id,
+      payload: {
+        event: 'animation',
+        data: {
+          name: this.state.animations[this.state.currentAnimationListIndex].name,
+          filename: this.state.animations[this.state.currentAnimationListIndex].filename
+        }
+      }
+    });
+  }
+
   onListModalClose() {
     this.setState({ listModalVisible: false });
   }
 
   onListModalItemClose(item: Object) {
-    this.setState({ listModalVisible: false });
+    this.setState({ listModalVisible: false, currentAnimationListIndex: item.index });
     this.socket.emit('signalFromClient', {
       receiverId: this.state.receiver.id,
       clientId: this.socket.id,
@@ -196,6 +241,7 @@ export default class App extends Component<Props, State> {
         </Modal>
         <Modal visible={this.state.listModalVisible} animationType={'slide'} transparent>
           <VideoList
+            animations={this.state.animations}
             onClose={this.onListModalClose.bind(this)}
             onPressItem={this.onListModalItemClose.bind(this)}
           />
@@ -214,9 +260,14 @@ export default class App extends Component<Props, State> {
           <Button onPressOut={this.onColorButtonPress.bind(this)}>
             <Text>Color</Text>
           </Button>
-          <Button onPressOut={this.onVideoListButtonPress.bind(this)}>
-            <Text>Animtions</Text>
-          </Button>
+          <VideoButtons>
+            <Button onPressOut={this.onVideoListButtonPress.bind(this)}>
+              <Text>Animations</Text>
+            </Button>
+            <Button onPressOut={this.onPressNext.bind(this)}>
+              <Text>Next</Text>
+            </Button>
+          </VideoButtons>
           <TrackPad
             onTouchMove={({ x, y }) => {
               this.onTouchMove(x, y);
