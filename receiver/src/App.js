@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import io from "socket.io-client";
-import { DefaultPlayer as Video } from "react-html5video";
+// import { DefaultPlayer as Video } from "react-html5video";
 import "react-html5video/dist/styles.css";
 
 import { SOCKET_URL, SOCKET_PORT, RECEIVER_ID, RECEIVER_NAME } from "./config";
@@ -35,7 +35,7 @@ const animationList = [
   {
     key: 5,
     name: "Konversation Hey",
-    filename: "180107_Signal_4.1_AI_Conversation_Hey_01.mov"
+    filename: "180119_MST_Signal_4.1_Conversational_AI_1280.mp4"
   },
   {
     key: 6,
@@ -123,7 +123,9 @@ class App extends Component {
 
           this.setState({
             mode: "light",
-            polyline: ""
+            polyline: "",
+            backgroundColor1: "#fff",
+            backgroundColor2: "#fff"
           });
 
           break;
@@ -132,7 +134,9 @@ class App extends Component {
 
           this.setState({
             mode: "dark",
-            polyline: ""
+            polyline: "",
+            backgroundColor1: "#000",
+            backgroundColor2: "#000"
           });
 
           break;
@@ -200,11 +204,12 @@ class App extends Component {
 
     return (
       <div className="video-wrapper">
-        <Video autoPlay loop muted>
+        <video autoPlay loop controls>
           <source
             src={`${process.env.PUBLIC_URL}/videos/${this.state.videoFile}`}
+            type="video/mp4"
           />
-        </Video>
+        </video>
       </div>
     );
   }
