@@ -11,6 +11,7 @@
   border-radius: 9999px;
   transition: "2s all";
   overflow: hidden;
+  margin: 0 auto;
 }
 
 .dark {
