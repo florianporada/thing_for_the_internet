@@ -6,7 +6,8 @@ import styled from 'styled-components/native';
 type Props = {
   onPressIn?: Function,
   onPressOut?: Function,
-  children: any
+  children: any,
+  style?: Object
 };
 
 const View = styled.View`
@@ -23,7 +24,11 @@ const View = styled.View`
 
 const Button = (props: Props) => {
   return (
-    <TouchableOpacity onPressIn={props.onPressIn} onPressOut={props.onPressOut}>
+    <TouchableOpacity
+      style={props.style || null}
+      onPressIn={props.onPressIn}
+      onPressOut={props.onPressOut}
+    >
       <View>{props.children}</View>
     </TouchableOpacity>
   );

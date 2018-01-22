@@ -1,6 +1,6 @@
 /* @flow */
 import React, { Component } from 'react';
-import { Image, Modal } from 'react-native';
+import { Modal, StatusBar } from 'react-native';
 import io from 'socket.io-client';
 import styled from 'styled-components/native';
 
@@ -43,6 +43,7 @@ const ButtonGroup = styled.View`
 
 const VideoButtons = styled.View`
   flex-direction: row;
+  width: 100%;
 `;
 
 const Text = styled.Text`
@@ -170,8 +171,6 @@ export default class App extends Component<Props, State> {
       });
     }
 
-    console.log(this.state.currentAnimationListIndex);
-
     this.socket.emit('signalFromClient', {
       receiverId: this.state.receiver.id,
       clientId: this.socket.id,
@@ -222,6 +221,7 @@ export default class App extends Component<Props, State> {
   renderLoading() {
     return (
       <LoadingView>
+        <StatusBar barStyle="light-content" />
         <Text>{this.state.status}</Text>
       </LoadingView>
     );
@@ -231,6 +231,7 @@ export default class App extends Component<Props, State> {
     if (!this.state.connected || !this.state.receiver) return this.renderLoading();
     return (
       <Container>
+        <StatusBar barStyle="light-content" />
         <Modal visible={this.state.colorModalVisible} animationType={'slide'} transparent>
           <ColorPicker
             onClose={() => {
@@ -261,10 +262,13 @@ export default class App extends Component<Props, State> {
             <Text>Color</Text>
           </Button>
           <VideoButtons>
-            <Button onPressOut={this.onVideoListButtonPress.bind(this)}>
+            <Button
+              style={{ width: '70%', paddingRight: 10 }}
+              onPressOut={this.onVideoListButtonPress.bind(this)}
+            >
               <Text>Animations</Text>
             </Button>
-            <Button onPressOut={this.onPressNext.bind(this)}>
+            <Button style={{ width: '30%' }} onPressOut={this.onPressNext.bind(this)}>
               <Text>Next</Text>
             </Button>
           </VideoButtons>
@@ -275,30 +279,7 @@ export default class App extends Component<Props, State> {
           />
         </ButtonGroup>
         <Branding>
-          <Image
-            style={{
-              alignSelf: 'center',
-              height: 30,
-              width: 100
-            }}
-            source={{
-              uri:
-                'https://cdn.greenhouse.io/external_greenhouse_job_boards/logos/000/005/398/original/Large_Logo-moovel_h_shiny_petrol_rgb.png?1460479590'
-            }}
-            resizeMode="center"
-          />
-          <Text style={{ color: '#1c1c1c', fontSize: 25, fontWeight: '100' }}>&#x2223;</Text>
-          <Image
-            style={{
-              alignSelf: 'center',
-              height: 30,
-              width: 100
-            }}
-            resizeMode="center"
-            source={{
-              uri: 'https://www.emobil-in-bw.de/uploads/tx_srfeuserregister/FraunhoferIAO_Logo.png'
-            }}
-          />
+          <Text style={{ color: '#1c1c1c', fontSize: 15, fontWeight: '100' }}>AMP Remote</Text>
         </Branding>
       </Container>
     );
