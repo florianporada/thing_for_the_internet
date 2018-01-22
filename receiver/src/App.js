@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import io from "socket.io-client";
 // import { DefaultPlayer as Video } from "react-html5video";
+import styled from "styled-components";
 import "react-html5video/dist/styles.css";
 
 import { SOCKET_URL, SOCKET_PORT, RECEIVER_ID, RECEIVER_NAME } from "./config";
@@ -15,7 +16,7 @@ const animationList = [
   {
     key: 1,
     name: "Moovel Logo",
-    filename: "171229_Signal01_MoovelLogo_weiß_01.mov"
+    filename: "180119_MST_Signal_4.1_Conversational_AI_1280.mp4"
   },
   {
     key: 2,
@@ -70,6 +71,60 @@ const animationList = [
   }
 ];
 
+const Box = styled.div`
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100vh;
+  border-radius: 9999px;
+  overflow: hidden;
+  margin: 0 auto;
+`;
+
+const Flash = styled.div`
+  position: absolute;
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100vh;
+  transition: all ${props => (props.delay ? props.delay : "0.2s")} ease;
+  overflow: hidden;
+  margin: 0 auto;
+  opacity: 0;
+  border-radius: 9999px;
+  top: 0;
+`;
+
+const FlashInner = styled.div`
+  position: absolute;
+  top: ${props => (props.size ? (100 - props.size) / 2 + "%" : "100%")};
+  height: ${props => (props.size ? props.size + "%" : "100%")};
+  width: ${props => (props.size ? props.size + "%" : "100%")};
+  border-radius: 99999px;
+  transition: all ${props => (props.delay ? props.delay : "0.2s")} ease;
+`;
+
+const Color = styled.div`
+  height: 100%;
+  width: 100%;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  display: block !important;
+`;
+
+const initState = {
+  // event: "idle",
+  videoFile: "",
+  polyline: "",
+  windowHeight: window.innerHeight,
+  windowWidth: window.innerWidth,
+  color: "",
+  backgroundColor1: "#000",
+  backgroundColor2: "#000"
+};
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -122,10 +177,8 @@ class App extends Component {
           // console.log("info", "startBlinking", data);
 
           this.setState({
-            mode: "light",
-            polyline: "",
-            backgroundColor1: "#fff",
-            backgroundColor2: "#fff"
+            ...initState,
+            mode: "light"
           });
 
           break;
@@ -133,10 +186,8 @@ class App extends Component {
           // console.log("info", "stopBlinking", data);
 
           this.setState({
-            mode: "dark",
-            polyline: "",
-            backgroundColor1: "#000",
-            backgroundColor2: "#000"
+            ...initState,
+            mode: "dark"
           });
 
           break;
@@ -147,8 +198,7 @@ class App extends Component {
           ${data.payload.data.y / 100 * this.state.windowWidth} `;
 
           this.setState({
-            backgroundColor1: "#000",
-            backgroundColor2: "#000",
+            ...initState,
             posX: data.payload.data.x,
             posY: data.payload.data.y,
             polyline: `${this.state.polyline} ${poly}`.trim()
@@ -160,9 +210,10 @@ class App extends Component {
           // console.log("info", "color", data);
 
           this.setState({
+            ...initState,
             backgroundColor1: data.payload.data.color1,
             backgroundColor2: data.payload.data.color2,
-            polyline: ""
+            color: this.state.event
           });
 
           break;
@@ -171,11 +222,9 @@ class App extends Component {
           // console.log("info", "animation", data);
 
           this.setState({
+            ...initState,
             videoFile: "wait",
-            backgroundColor1: "#000",
-            backgroundColor2: "#000",
-            newVideoFile: data.payload.data.filename,
-            polyline: ""
+            newVideoFile: data.payload.data.filename
           });
 
           break;
@@ -189,9 +238,25 @@ class App extends Component {
     });
   }
 
+  renderFlash() {
+    return (
+      <Flash delay="0.4s" className={[this.state.mode].join(" ")}>
+        <FlashInner
+          className={[this.state.mode].join(" ")}
+          size={80}
+          delay="0.3s"
+        />
+        <FlashInner
+          className={[this.state.mode].join(" ")}
+          size={60}
+          delay="0.2s"
+        />
+      </Flash>
+    );
+  }
+
   renderVideo() {
-    if (this.state.event !== "animation") return null;
-    if (!this.state.videoFile) return null;
+    if (this.state.event !== "animation" || !this.state.videoFile) return null;
     if (this.state.videoFile !== this.state.newVideoFile) {
       setTimeout(() => {
         this.setState({
@@ -227,27 +292,47 @@ class App extends Component {
         <polyline
           fill="none"
           stroke="#11dbc2"
-          strokeWidth="5"
+          strokeWidth="10"
           points={this.state.polyline}
         />
       </svg>
     );
   }
 
-  render() {
-    const style = {
-      background: `linear-gradient(to right, 
-        ${this.state.backgroundColor1}, 
-        ${this.state.backgroundColor2})`
-    };
+  renderColor() {
+    // if (this.state.event !== "color") return null;
+    let style = {};
+
+    if (this.state.event === "color") {
+      style = {
+        background: `linear-gradient(to right, 
+          ${this.state.backgroundColor1},
+          ${this.state.backgroundColor2})`
+      };
+    } else {
+      style = {
+        opacity: 0
+      };
+    }
 
     return (
-      <div style={style} className={[this.state.mode, "App"].join(" ")}>
+      <Color
+        className={[this.state.event ? this.state.event : ""].join(" ")}
+        style={style}
+      />
+    );
+  }
+
+  render() {
+    return (
+      <Box>
         <div className="App-content">
+          {this.renderFlash()}
           {this.renderVideo()}
           {this.renderMovement()}
+          {this.renderColor()}
         </div>
-      </div>
+      </Box>
     );
   }
 }

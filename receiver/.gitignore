@@ -6,6 +6,10 @@
 # testing
 /coverage
 
+#videos
+/public/videos/*
+!/public/videos/.gitkeep
+
 # production
 /build
 
